@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>El mundo de Yami · Pequeños científicos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+  :root{
+    --rosa:#ff8fc7; --rosa2:#ff5fa8; --morado:#9b7bff; --morado2:#7c5cff;
+    --crema:#fff6fb; --amarillo:#ffd84d; --verde:#76d275; --azul:#5cc8ff;
+    --texto:#3a2a4d; --sombra:0 10px 28px rgba(124,92,255,.35);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0}
+  html,body{height:100%; overflow:hidden}
+  body{
+    font-family:'Fredoka',system-ui,sans-serif; color:var(--texto);
+    background:#0a0820; user-select:none; touch-action:manipulation;
+  }
+  .screen{position:fixed; inset:0; display:none; flex-direction:column;
+    align-items:center; justify-content:center; padding:18px; overflow:hidden}
+  .screen.activa{display:flex; animation:fade .5s ease}
+  @keyframes fade{from{opacity:0; transform:scale(.98)} to{opacity:1; transform:none}}
+
+  /* ---------- VIDEO FONDO ---------- */
+  #bgEspacio{position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2}
+  #veloEspacio{position:fixed; inset:0; z-index:-1;
+    background:radial-gradient(circle at 50% 30%, rgba(20,10,60,.15), rgba(8,6,30,.78))}
+
+  /* ---------- BOTONES ---------- */
+  .btn{font-family:inherit; font-weight:700; border:none; cursor:pointer;
+    color:#fff; border-radius:60px; padding:20px 42px; font-size:clamp(20px,4.5vw,30px);
+    background:linear-gradient(135deg,var(--rosa),var(--rosa2)); box-shadow:var(--sombra);
+    transition:transform .15s; letter-spacing:.5px}
+  .btn:active{transform:scale(.93)}
+  .btn.grande{padding:26px 70px; font-size:clamp(26px,6vw,40px); animation:lat 1.6s ease-in-out infinite}
+  .btn.verde{background:linear-gradient(135deg,#8fe38d,var(--verde))}
+  .btn.morado{background:linear-gradient(135deg,var(--morado),var(--morado2))}
+  .btn.chico{padding:14px 30px; font-size:20px}
+  @keyframes lat{0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-10px) scale(1.04)}}
+
+  /* ---------- INICIO ---------- */
+  #inicio .titulo{color:#fff; text-align:center; text-shadow:0 4px 0 #7c5cff,0 8px 24px rgba(0,0,0,.5);
+    font-size:clamp(30px,8vw,68px); line-height:1.05; margin-bottom:6px}
+  #inicio .sub{color:#ffe7f4; font-size:clamp(16px,3.6vw,26px); text-align:center; margin-bottom:30px;
+    text-shadow:0 2px 8px rgba(0,0,0,.6)}
+  .yamiFlota{height:min(34vh,300px); filter:drop-shadow(0 12px 20px rgba(0,0,0,.4));
+    animation:flota 4s ease-in-out infinite; margin-bottom:18px}
+  @keyframes flota{0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-18px) rotate(2deg)}}
+  .estrellita{position:absolute; color:#fff; font-size:24px; opacity:.8; animation:twinkle 2s infinite}
+  @keyframes twinkle{0%,100%{opacity:.2; transform:scale(.7)} 50%{opacity:1; transform:scale(1.2)}}
+
+  /* ---------- INTRO / GLOBO DIÁLOGO ---------- */
+  .escena{display:flex; flex-direction:column; align-items:center; gap:14px; max-width:680px; text-align:center}
+  .globo{background:#fff; border-radius:30px; padding:22px 26px; font-size:clamp(18px,4vw,26px);
+    box-shadow:var(--sombra); position:relative; font-weight:500; color:var(--texto)}
+  .globo:after{content:''; position:absolute; bottom:-16px; left:50%; transform:translateX(-50%);
+    border:16px solid transparent; border-top-color:#fff; border-bottom:0}
+  .yamiHabla{height:min(40vh,360px); filter:drop-shadow(0 10px 16px rgba(0,0,0,.35))}
+
+  /* ---------- SELECCIÓN ---------- */
+  #seleccion{background:linear-gradient(160deg,#ffd9ec,#e9ddff)}
+  .panelSel{display:flex; width:100%; max-width:1000px; gap:20px; align-items:center;
+    justify-content:center; flex-wrap:wrap}
+  .yamiSel{height:min(46vh,420px); filter:drop-shadow(0 12px 18px rgba(124,92,255,.4));
+    transition:transform .35s; animation:flota 4s ease-in-out infinite}
+  .tarjetas{display:flex; flex-direction:column; gap:16px; min-width:280px}
+  .cardSel{display:flex; align-items:center; gap:16px; background:#fff; border-radius:26px;
+    padding:18px 22px; box-shadow:0 8px 20px rgba(124,92,255,.2); cursor:pointer;
+    border:5px solid transparent; transition:transform .15s,border-color .2s; font-size:clamp(18px,3.6vw,24px); font-weight:600}
+  .cardSel:active{transform:scale(.96)}
+  .cardSel.sel{border-color:var(--rosa2); transform:scale(1.03)}
+  .cardSel .emo{font-size:40px}
+  .tituloSec{font-size:clamp(24px,5vw,40px); color:#7c5cff; text-align:center; margin-bottom:16px;
+    text-shadow:0 2px 0 #fff}
+
+  /* ---------- PANEL PADRES ---------- */
+  .overlay{position:fixed; inset:0; background:rgba(40,20,60,.55); display:none;
+    align-items:center; justify-content:center; z-index:50; padding:18px}
+  .overlay.activa{display:flex; animation:fade .3s}
+  .modal{background:#fff; border-radius:30px; padding:26px 24px; max-width:520px; width:100%;
+    box-shadow:0 20px 50px rgba(0,0,0,.4); text-align:center; max-height:90vh; overflow:auto}
+  .badgePadres{display:inline-block; background:#fff0d6; color:#c98a00; font-weight:700;
+    padding:8px 18px; border-radius:30px; font-size:18px; margin-bottom:14px}
+  .modal h2{font-size:26px; color:var(--texto); margin-bottom:10px}
+  .modal p{font-size:18px; line-height:1.45; color:#5a4a6b; margin-bottom:8px}
+  .mats{background:#fff6fb; border-radius:18px; padding:14px; margin:14px 0; text-align:left}
+  .mats b{color:#ff5fa8}
+  .mats ul{margin:6px 0 0 20px; font-size:17px; line-height:1.6}
+
+  /* ---------- EXPERIMENTOS ---------- */
+  #experimentos,#calma,#casa{background:linear-gradient(160deg,#dff3ff,#eafbe9)}
+  .gridExp{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px;
+    width:100%; max-width:760px; margin-top:10px}
+  .expCard{background:#fff; border-radius:22px; padding:18px 12px; text-align:center; cursor:pointer;
+    box-shadow:0 6px 16px rgba(0,0,0,.12); transition:transform .15s; font-weight:600; font-size:17px}
+  .expCard:active{transform:scale(.95)}
+  .expCard .emo{font-size:44px; display:block; margin-bottom:6px}
+  .expCard.soon{opacity:.55}
+
+  /* mesa 2d */
+  #mesaWrap{position:relative; width:100%; height:100%; display:flex; flex-direction:column;
+    align-items:center; justify-content:space-between; padding:16px 10px}
+  .zonaFlote{position:relative; width:100%; flex:1}
+  .obj2d{position:absolute; width:96px; height:96px; cursor:pointer; transition:transform .15s;
+    animation:flota 3.6s ease-in-out infinite; filter:drop-shadow(0 6px 6px rgba(0,0,0,.18))}
+  .obj2d svg{width:100%; height:100%; display:block}
+  .obj2d:active{transform:scale(.88)}
+  .obj2d.guardado{display:none}
+  .mesa2d{position:relative; width:min(94%,600px); height:120px; margin-bottom:48px}
+  .mesa2d .tablero{position:absolute; top:0; left:0; width:100%; height:34px; border-radius:12px;
+    background:linear-gradient(#e6c194,#cc9c68); box-shadow:0 7px 0 #a87a4f, var(--sombra)}
+  .mesa2d .pata{position:absolute; bottom:-48px; width:18px; height:82px; border-radius:0 0 7px 7px;
+    background:linear-gradient(#caa074,#a87a4f)}
+  .mesa2d .pata.izq{left:13%} .mesa2d .pata.der{right:13%}
+  .mesaSlots{position:absolute; top:-72px; left:0; width:100%; display:flex; justify-content:center;
+    gap:8px; align-items:flex-end; pointer-events:none}
+  .slot2d{width:72px; height:78px; opacity:0; transform:translateY(10px);
+    transition:opacity .4s ease, transform .4s ease; filter:drop-shadow(0 4px 4px rgba(0,0,0,.2))}
+  .slot2d svg{width:100%; height:100%; display:block}
+  .slot2d.puesto{opacity:1; transform:translateY(0)}
+  .contador{background:#fff; padding:8px 22px; border-radius:30px; font-weight:700; font-size:20px;
+    box-shadow:var(--sombra)}
+
+  /* ---------- REACCIÓN (experimento 2D) ---------- */
+  .escenaExp{display:flex; flex-direction:column; align-items:center; gap:10px; width:100%}
+  .hintExp{background:#fff; padding:10px 24px; border-radius:30px; font-size:20px; font-weight:600;
+    box-shadow:var(--sombra); animation:lat 1.4s ease-in-out infinite}
+  .labStage{position:relative; width:min(92%,360px); height:min(52vh,340px)}
+  .labStage svg{width:100%; height:100%; overflow:visible}
+  #escenaEspuma,#escenaAgua{position:absolute; inset:0}
+  #manoG{transform-box:fill-box; transform-origin:50% 0;
+    transition:transform .8s cubic-bezier(.5,0,.3,1)}
+  #manoG.metida{transform:translateY(96px)}
+  #botella{transform-box:fill-box; transform-origin:50% 14%; transition:transform .7s cubic-bezier(.5,0,.3,1)}
+  #botella.verter{transform:translate(-34px,82px) rotate(-118deg)}
+  #chorro{opacity:0; transition:opacity .25s}
+  #chorro.activo{opacity:1; animation:chorroAnim .5s linear infinite}
+  @keyframes chorroAnim{from{stroke-dashoffset:0}to{stroke-dashoffset:-16}}
+  #foam{position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none}
+  .fb{position:absolute; border-radius:50%; opacity:0; box-shadow:inset -3px -4px 6px rgba(0,0,0,.12);
+    animation:fbPop .6s ease-out forwards}
+  @keyframes fbPop{0%{opacity:0; transform:translate(-50%,-50%) scale(.2)}
+    60%{opacity:1} 100%{opacity:1; transform:translate(-50%,-50%) scale(1)}}
+  .botonesExp{display:flex; gap:12px; align-items:center}
+
+  /* ---------- CALMA ---------- */
+  #lienzoBurbujas{position:fixed; inset:0; z-index:1}
+  .calmaUI{position:fixed; z-index:3; bottom:20px; left:50%; transform:translateX(-50%);
+    display:flex; gap:12px}
+  #lienzoDibujo{position:fixed; inset:0; z-index:2; display:none; touch-action:none}
+
+  /* ---------- CASA ---------- */
+  .videoBox{width:min(94%,640px); aspect-ratio:16/9; background:#000; border-radius:20px;
+    display:flex; align-items:center; justify-content:center; color:#fff; font-size:20px; text-align:center;
+    box-shadow:var(--sombra); overflow:hidden}
+  .videoBox iframe{width:100%; height:100%; border:0}
+
+  /* ---------- BARRAS ---------- */
+  .topbar{position:fixed; top:0; left:0; right:0; z-index:40; display:flex; justify-content:space-between;
+    padding:12px 16px; pointer-events:none}
+  .topbar .btn{pointer-events:auto}
+  .iconbtn{pointer-events:auto; width:54px; height:54px; border-radius:50%; border:none; cursor:pointer;
+    font-size:24px; background:#fff; box-shadow:var(--sombra); display:flex; align-items:center; justify-content:center}
+  .yamiMini{position:fixed; bottom:0; left:10px; height:160px; z-index:5; pointer-events:none;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,.3))}
+</style>
+</head>
+<body>
+
+<video id="bgEspacio" autoplay muted loop playsinline></video>
+<div id="veloEspacio"></div>
+
+<!-- BARRA SUPERIOR -->
+<div class="topbar" id="topbar" style="display:none">
+  <button class="iconbtn" id="btnHome" title="Inicio">🏠</button>
+  <button class="iconbtn" id="btnMusica" title="Música">🔊</button>
+</div>
+
+<!-- ====== INICIO ====== -->
+<section id="inicio" class="screen activa">
+  <span class="estrellita" style="top:18%;left:14%">✦</span>
+  <span class="estrellita" style="top:26%;right:18%;animation-delay:.6s">✧</span>
+  <span class="estrellita" style="top:60%;left:22%;animation-delay:1s">✦</span>
+  <span class="estrellita" style="bottom:18%;right:14%;animation-delay:.3s">✧</span>
+  <h1 class="titulo">El mundo de Yami</h1>
+  <p class="sub">🌈🧪 Pequeños científicos construyendo<br>nuestro laboratorio mágico</p>
+  <img class="yamiFlota" src="assets/img/yami-base.png" alt="Yami">
+  <button class="btn grande" id="btnEmpezar">EMPEZAR ▶</button>
+</section>
+
+<!-- ====== INTRO (tu video de presentación) ====== -->
+<section id="intro" class="screen" style="padding:0; background:#000">
+  <video id="vidIntro" src="assets/video/chica.mp4" playsinline preload="auto"
+    style="width:100%; height:100%; object-fit:contain; background:#000"></video>
+  <button class="btn verde" id="btnIntroSig"
+    style="position:fixed; bottom:24px; right:24px; z-index:10">Continuar ▶</button>
+</section>
+
+<!-- ====== SELECCIÓN ====== -->
+<section id="seleccion" class="screen">
+  <h2 class="tituloSec">¿A dónde vamos hoy?</h2>
+  <div class="panelSel">
+    <img class="yamiSel" id="yamiSel" src="assets/img/yami-base.png" alt="Yami">
+    <div class="tarjetas">
+      <div class="cardSel" data-sec="exp" data-ropa="cientifica" data-frase="¡Listo para experimentar!">
+        <span class="emo">🔬</span><span>Experimentos mágicos</span></div>
+      <div class="cardSel" data-sec="calma" data-ropa="pijama" data-frase="Hora de relajarnos">
+        <span class="emo">🫧</span><span>Zona de calma</span></div>
+      <div class="cardSel" data-sec="casa" data-ropa="carpintera" data-frase="¡Hora de construir!">
+        <span class="emo">🏠</span><span>En casa con la familia</span></div>
+    </div>
+  </div>
+  <button class="btn grande" id="btnSelEmpezar" style="margin-top:22px; opacity:.4; pointer-events:none">EMPEZAR ▶</button>
+</section>
+
+<!-- ====== EXPERIMENTOS (lista) ====== -->
+<section id="experimentos" class="screen">
+  <h2 class="tituloSec">🔬 Experimentos mágicos</h2>
+  <div class="gridExp" id="gridExp"></div>
+</section>
+
+<!-- ====== EXPERIMENTO: MESA 3D ====== -->
+<section id="mesa" class="screen" style="background:linear-gradient(160deg,#fff0d6,#ffe1f0)">
+  <div id="mesaWrap">
+    <div class="contador" id="contadorMesa">Toca los objetos ✨</div>
+    <div class="zonaFlote" id="zonaFlote"></div>
+    <div class="mesa2d">
+      <div class="tablero"></div>
+      <div class="pata izq"></div>
+      <div class="pata der"></div>
+      <div class="mesaSlots" id="mesaSlots"></div>
+    </div>
+    <button class="btn morado" id="btnHacerExp" style="margin-top:6px; display:none">¡Hacer el experimento! ✨</button>
+  </div>
+</section>
+
+<!-- ====== REACCIÓN: MONSTRUO DE ESPUMA (2D) ====== -->
+<section id="expReaccion" class="screen" style="background:linear-gradient(160deg,#ffe9c2,#ffd3e6)">
+  <h2 class="tituloSec" id="expReTitulo">🌋 Monstruo de espuma</h2>
+  <div class="escenaExp">
+    <div class="hintExp" id="hintExp">👆 Toca la botella</div>
+    <div class="labStage" id="labStage">
+     <div id="escenaEspuma">
+      <svg viewBox="0 0 360 340" xmlns="http://www.w3.org/2000/svg">
+        <!-- mesa -->
+        <ellipse cx="180" cy="318" rx="150" ry="20" fill="#caa37a"/>
+        <rect x="40" y="312" width="280" height="14" rx="6" fill="#a87f51"/>
+        <!-- VASO -->
+        <g>
+          <path d="M120 170 L130 300 Q132 312 180 312 Q228 312 230 300 L240 170 Z"
+                fill="rgba(220,235,255,.45)" stroke="#9fc6e8" stroke-width="4"/>
+          <!-- liquido dentro -->
+          <clipPath id="cupClip"><path d="M120 170 L130 300 Q132 312 180 312 Q228 312 230 300 L240 170 Z"/></clipPath>
+          <rect id="liquido" x="118" y="300" width="124" height="0" fill="#ffd84d" clip-path="url(#cupClip)" opacity=".85"/>
+          <ellipse cx="180" cy="170" rx="60" ry="11" fill="rgba(220,235,255,.5)" stroke="#9fc6e8" stroke-width="4"/>
+        </g>
+        <!-- chorro (cae al vaso) -->
+        <line id="chorro" x1="186" y1="138" x2="180" y2="170" stroke="#76d275" stroke-width="9"
+              stroke-linecap="round" stroke-dasharray="2 14"/>
+        <!-- BOTELLA (arriba-derecha del vaso) -->
+        <g id="botella">
+          <rect x="205" y="58" width="38" height="66" rx="12" fill="#7ed47c" stroke="#4caf50" stroke-width="3"/>
+          <rect x="217" y="44" width="14" height="16" rx="4" fill="#5bb35a"/>
+          <rect x="214" y="37" width="20" height="9" rx="3" fill="#3e8e41"/>
+          <rect x="210" y="70" width="24" height="30" rx="5" fill="#fff" opacity=".7"/>
+        </g>
+      </svg>
+      <div id="foam"></div>
+     </div><!-- /escenaEspuma -->
+     <div id="escenaAgua" style="display:none">
+      <svg viewBox="0 0 360 340" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="180" cy="322" rx="150" ry="18" fill="#caa37a"/>
+        <path d="M95 205 L105 300 Q107 312 180 312 Q253 312 255 300 L265 205 Z"
+              fill="rgba(200,230,255,.45)" stroke="#7fb6e0" stroke-width="4"/>
+        <clipPath id="tanqueClip"><path d="M100 238 L260 238 L255 300 Q253 310 180 310 Q107 310 105 300 Z"/></clipPath>
+        <g clip-path="url(#tanqueClip)">
+          <rect x="100" y="238" width="160" height="84" fill="#5cc8ff" opacity=".8"/>
+          <ellipse id="onda" cx="180" cy="242" rx="42" ry="8" fill="#fff" opacity="0"/>
+        </g>
+        <ellipse cx="180" cy="238" rx="80" ry="12" fill="#9ad9ff"/>
+        <ellipse cx="180" cy="205" rx="85" ry="13" fill="rgba(200,230,255,.4)" stroke="#7fb6e0" stroke-width="4"/>
+        <g id="manoG">
+          <rect x="164" y="20" width="34" height="74" rx="14" fill="#f4c08a" stroke="#d89a5e" stroke-width="3"/>
+          <path d="M158 92 Q158 124 181 126 Q204 124 204 92 Q204 84 198 84 L164 84 Q158 84 158 92 Z"
+                fill="#f4c08a" stroke="#d89a5e" stroke-width="3"/>
+          <rect x="162" y="116" width="9" height="20" rx="4" fill="#f4c08a" stroke="#d89a5e" stroke-width="2"/>
+          <rect x="176" y="120" width="9" height="22" rx="4" fill="#f4c08a" stroke="#d89a5e" stroke-width="2"/>
+          <rect x="190" y="116" width="9" height="20" rx="4" fill="#f4c08a" stroke="#d89a5e" stroke-width="2"/>
+        </g>
+        <g id="destellos" style="display:none">
+          <text x="150" y="70" font-size="24">✨</text>
+          <text x="206" y="58" font-size="18">✨</text>
+          <text x="182" y="36" font-size="16">⭐</text>
+        </g>
+      </svg>
+     </div><!-- /escenaAgua -->
+    </div>
+    <div class="botonesExp">
+      <button class="btn verde" id="btnOtraVez" style="display:none">🔁 Otra vez</button>
+      <button class="btn chico morado" id="btnVolverExp">◀ Volver</button>
+    </div>
+  </div>
+</section>
+
+<!-- ====== CALMA ====== -->
+<section id="calma" class="screen">
+  <canvas id="lienzoBurbujas"></canvas>
+  <canvas id="lienzoDibujo"></canvas>
+  <div class="calmaUI">
+    <button class="btn chico" id="btnModoBurbujas">🫧 Burbujas</button>
+    <button class="btn chico morado" id="btnModoDibujo">🎨 Dibujar</button>
+    <button class="btn chico verde" id="btnLimpiar" style="display:none">🧽 Limpiar</button>
+  </div>
+</section>
+
+<!-- ====== CASA ====== -->
+<section id="casa" class="screen">
+  <h2 class="tituloSec">🏠 En casa con la familia</h2>
+  <div class="gridExp" id="gridCasa" style="max-width:620px"></div>
+</section>
+
+<img class="yamiMini" id="yamiMini" src="assets/img/yami-cientifica.png" style="display:none" alt="">
+
+<!-- ====== PANEL PARA PAPÁS ====== -->
+<div class="overlay" id="overlayPadres">
+  <div class="modal">
+    <span class="badgePadres">👩‍👦 Para los papás</span>
+    <h2 id="padresTitulo">Experimento</h2>
+    <p id="padresTexto"></p>
+    <div class="mats"><b>🧰 Materiales:</b><ul id="padresMats"></ul></div>
+    <button class="btn verde" id="btnPadresEmpezar">Empezar el juego ▶</button>
+  </div>
+</div>
+
+<audio id="musica" src="assets/audio/musica.mp3" loop></audio>
+
+<script src="assets/models.js"></script>
+<script>
+/* ================== MOTOR DE PANTALLAS ================== */
+const $=s=>document.querySelector(s);
+const screens=document.querySelectorAll('.screen');
+function ir(id){
+  screens.forEach(s=>s.classList.remove('activa'));
+  $('#'+id).classList.add('activa');
+  $('#topbar').style.display = (id==='inicio')?'none':'flex';
+  $('#bgEspacio').style.display=(id==='inicio')?'block':'none';
+  $('#veloEspacio').style.display=(id==='inicio')?'block':'none';
+  if(id!=='intro'){ const v=$('#vidIntro'); if(v) v.pause(); }
+}
+
+/* ================== VOZ (Yami habla) ================== */
+let vozYami=null;
+function cargarVoz(){
+  const vs=speechSynthesis.getVoices().filter(v=>v.lang.startsWith('es'));
+  vozYami=vs.find(v=>/female|mujer|mónica|monica|paulina|helena|sabina/i.test(v.name))||vs[0]||null;
+}
+speechSynthesis.onvoiceschanged=cargarVoz; cargarVoz();
+function decir(txt){
+  try{ speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(txt);
+    u.lang='es-ES'; u.rate=.92; u.pitch=1.3; if(vozYami)u.voice=vozYami;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ================== SONIDOS ================== */
+let actx=null;
+function beep(freq=600,dur=.12,tipo='sine',vol=.25){
+  try{ actx=actx||new(window.AudioContext||window.webkitAudioContext)();
+    const o=actx.createOscillator(),g=actx.createGain();
+    o.type=tipo; o.frequency.value=freq; o.connect(g); g.connect(actx.destination);
+    g.gain.setValueAtTime(vol,actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+dur);
+    o.start(); o.stop(actx.currentTime+dur);
+  }catch(e){}
+}
+function pop(){ beep(380+Math.random()*500,.18,'sine',.3); }
+
+/* ================== MÚSICA ================== */
+const musica=$('#musica'); let musOn=false;
+function musToggle(){ musOn=!musOn; if(musOn){musica.volume=.35; musica.play();} else musica.pause();
+  $('#btnMusica').textContent=musOn?'🔊':'🔇'; }
+$('#btnMusica').onclick=musToggle;
+$('#btnHome').onclick=()=>{ ir('seleccion'); };
+
+/* ================== VIDEO FONDO ================== */
+const bg=$('#bgEspacio');
+bg.src='assets/video/espacio.mp4';
+
+/* ================== INICIO -> INTRO ================== */
+$('#btnEmpezar').onclick=()=>{
+  ir('intro');
+  const v=$('#vidIntro'); v.currentTime=0; v.muted=false; v.volume=1;
+  v.play().catch(()=>{});
+  v.onended=finIntro;
+};
+function finIntro(){
+  const v=$('#vidIntro'); v.pause();
+  if(!musOn) musToggle();
+  ir('seleccion'); decir('¿A dónde vamos hoy?');
+}
+$('#btnIntroSig').onclick=finIntro;
+
+/* ================== SELECCIÓN (cambio de ropa) ================== */
+let seccionSel=null;
+document.querySelectorAll('.cardSel').forEach(c=>{
+  c.onclick=()=>{
+    document.querySelectorAll('.cardSel').forEach(x=>x.classList.remove('sel'));
+    c.classList.add('sel');
+    seccionSel=c.dataset.sec;
+    $('#yamiSel').src='assets/img/yami-'+c.dataset.ropa+'.png';
+    $('#yamiSel').style.transform='scale(1.06)';
+    setTimeout(()=>$('#yamiSel').style.transform='',300);
+    pop(); decir(c.dataset.frase);
+    const b=$('#btnSelEmpezar'); b.style.opacity='1'; b.style.pointerEvents='auto';
+  };
+});
+$('#btnSelEmpezar').onclick=()=>{
+  if(seccionSel==='exp') ir('experimentos');
+  else if(seccionSel==='calma'){ ir('calma'); iniciarCalma(); decir('Hora de relajarnos. Toca las burbujas.'); }
+  else if(seccionSel==='casa') ir('casa');
+};
+
+/* ================== DATOS EXPERIMENTOS ================== */
+const ICONS={
+  recipiente:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="40" rx="26" ry="7" fill="#eaf6ff" stroke="#7fb6e0" stroke-width="3"/><path d="M24 40 L31 80 Q33 88 50 88 Q67 88 69 80 L76 40" fill="#dff0ff" stroke="#7fb6e0" stroke-width="3"/></svg>`,
+  bicarbonato:`<svg viewBox="0 0 100 100"><rect x="30" y="26" width="40" height="60" rx="4" fill="#fff" stroke="#e0a92e" stroke-width="3"/><rect x="30" y="46" width="40" height="24" fill="#ffd84d"/><circle cx="50" cy="58" r="9" fill="#fff" stroke="#e0a92e" stroke-width="2"/><text x="50" y="39" font-family="Arial" font-weight="bold" font-size="8" fill="#c98a00" text-anchor="middle">BICARB.</text></svg>`,
+  vinagre:`<svg viewBox="0 0 100 100"><rect x="42" y="16" width="16" height="12" rx="2" fill="#4caf50"/><path d="M40 28 Q36 34 36 46 L36 82 Q36 88 42 88 L58 88 Q64 88 64 82 L64 46 Q64 34 60 28 Z" fill="#c7e8aa" stroke="#6aa84f" stroke-width="3"/><rect x="39" y="50" width="26" height="22" rx="2" fill="#fff" opacity=".9"/><text x="50" y="64" font-family="Arial" font-weight="bold" font-size="7" fill="#3e6b2e" text-anchor="middle">VINAGRE</text></svg>`,
+  colorante:`<svg viewBox="0 0 100 100"><g><rect x="18" y="44" width="15" height="34" rx="4" fill="#ff5fa8" stroke="#d63d86" stroke-width="2"/><rect x="22" y="36" width="7" height="10" fill="#d63d86"/></g><g><rect x="43" y="38" width="15" height="40" rx="4" fill="#5cc8ff" stroke="#2f9fd6" stroke-width="2"/><rect x="47" y="30" width="7" height="10" fill="#2f9fd6"/></g><g><rect x="68" y="46" width="15" height="32" rx="4" fill="#ffd84d" stroke="#e0a92e" stroke-width="2"/><rect x="72" y="38" width="7" height="10" fill="#e0a92e"/></g></svg>`,
+  agua:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="30" rx="18" ry="5" fill="#eaf6ff" stroke="#7fb6e0" stroke-width="3"/><path d="M32 30 L30 82 Q30 88 36 88 L64 88 Q70 88 70 82 L68 30 Z" fill="#dff0ff" stroke="#7fb6e0" stroke-width="3"/><path d="M34 58 L66 58 L65 82 Q65 86 60 86 L40 86 Q35 86 35 82 Z" fill="#5cc8ff" opacity=".8"/><path d="M68 40 Q82 43 82 54" fill="none" stroke="#7fb6e0" stroke-width="3"/></svg>`,
+  arena:`<svg viewBox="0 0 100 100"><rect x="32" y="22" width="36" height="10" rx="3" fill="#caa074"/><path d="M30 32 L32 82 Q32 88 38 88 L62 88 Q68 88 68 82 L70 32 Z" fill="#fff3df" stroke="#d8b78a" stroke-width="3"/><path d="M34 60 Q50 54 66 60 L65 82 Q65 86 60 86 L40 86 Q35 86 35 82 Z" fill="#e9c89a"/><text x="50" y="52" font-size="14" text-anchor="middle">✨</text></svg>`
+};
+const EXPERIMENTOS=[
+  {id:'espuma', emo:'🌋', nombre:'Monstruo de espuma', jugable:true, tipo:'espuma',
+   padres:'Tu pequeño tocará cada material para llevarlo a la mesa. Al juntarlos, aparecerá una espuma mágica de colores. Acompáñalo nombrando cada objeto.',
+   mats:['Recipiente','Bicarbonato','Vinagre','Colorante'],
+   objetos:[
+     {icon:'recipiente', nombre:'recipiente'},
+     {icon:'bicarbonato', nombre:'bicarbonato'},
+     {icon:'vinagre', nombre:'vinagre'},
+     {icon:'colorante', nombre:'colorante'}],
+   espumaColores:['#ff5fa8','#9b7bff','#5cc8ff','#76d275','#ffd84d']},
+  {id:'agua', emo:'💧', nombre:'Agua que no moja', jugable:true, tipo:'agua',
+   padres:'Tu pequeño preparará el recipiente, el agua y la arena mágica. Luego, tocando la pantalla, meterá la mano en el agua... ¡y saldrá seca! Acompáñalo nombrando cada paso.',
+   mats:['Recipiente','Agua','Arena mágica (hidrofóbica)'],
+   objetos:[
+     {icon:'recipiente', nombre:'recipiente'},
+     {icon:'agua', nombre:'agua'},
+     {icon:'arena', nombre:'arena mágica'}]},
+  {id:'flor', emo:'🌱', nombre:'Flor mágica', jugable:false},
+  {id:'tornado', emo:'🌪️', nombre:'Tornado mágico', jugable:false},
+  {id:'nube', emo:'☁️', nombre:'Nube que llueve', jugable:false},
+  {id:'diaynoche', emo:'☀️', nombre:'Día y noche', jugable:false},
+  {id:'globo', emo:'🎈', nombre:'Globo que se infla', jugable:false},
+];
+const gridExp=$('#gridExp');
+EXPERIMENTOS.forEach(e=>{
+  const d=document.createElement('div');
+  d.className='expCard'+(e.jugable?'':' soon');
+  d.innerHTML=`<span class="emo">${e.emo}</span>${e.nombre}${e.jugable?'':'<br><small>pronto</small>'}`;
+  d.onclick=()=>{ pop(); if(e.jugable) abrirPadres(e); else decir('Pronto'); };
+  gridExp.appendChild(d);
+});
+
+/* ================== PANEL PADRES ================== */
+let expActual=null;
+function abrirPadres(e){
+  expActual=e;
+  $('#padresTitulo').textContent=e.emo+' '+e.nombre;
+  $('#padresTexto').textContent=e.padres;
+  $('#padresMats').innerHTML=e.mats.map(m=>`<li>${m}</li>`).join('');
+  $('#btnPadresEmpezar').onclick=()=>{
+    $('#overlayPadres').classList.remove('activa');
+    iniciarMesa(expActual);
+  };
+  $('#overlayPadres').classList.add('activa');
+}
+
+/* ================== MESA 3D (tocar para juntar) ================== */
+function iniciarMesa(e){
+  ir('mesa');
+  $('#yamiMini').src='assets/img/yami-cientifica.png'; $('#yamiMini').style.display='block';
+  const zona=$('#zonaFlote'); zona.innerHTML='';
+  const slots=$('#mesaSlots'); slots.innerHTML='';
+  $('#btnHacerExp').style.display='none';
+  let juntados=0; const total=e.objetos.length;
+  $('#contadorMesa').textContent=`Toca los objetos ✨ (0/${total})`;
+  decir('Toca cada objeto para ponerlo en la mesa.');
+
+  e.objetos.forEach((o,i)=>{
+    const fig=ICONS[o.icon]||'';
+    const mv=document.createElement('div');
+    mv.className='obj2d';
+    mv.innerHTML=fig;
+    mv.style.left=(6+Math.random()*74)+'%';
+    mv.style.top=(6+Math.random()*60)+'%';
+    mv.style.animationDelay=(Math.random()*1.6)+'s';
+    const slot=document.createElement('div'); slot.className='slot2d';
+    slot.innerHTML=fig;
+    slots.appendChild(slot);
+    mv.addEventListener('click',()=>{
+      if(mv.classList.contains('guardado'))return;
+      mv.classList.add('guardado'); slot.classList.add('puesto');
+      pop(); decir('¡'+o.nombre+'!'); juntados++;
+      $('#contadorMesa').textContent=`¡Muy bien! (${juntados}/${total})`;
+      if(juntados===total){
+        $('#contadorMesa').textContent='¡Mesa lista! 🎉';
+        $('#btnHacerExp').style.display='inline-block';
+        decir('¡Mesa lista! Ahora toca el botón para hacer el experimento.');
+      }
+    });
+    zona.appendChild(mv);
+  });
+  $('#btnHacerExp').onclick=()=>irReaccion(e);
+}
+
+/* ----- Reacción 2D: Monstruo de espuma ----- */
+let expReac=null, reaccionLista=true;
+function irReaccion(e){
+  expReac=e; ir('expReaccion');
+  $('#yamiMini').src='assets/img/yami-cientifica.png'; $('#yamiMini').style.display='block';
+  $('#expReTitulo').textContent=e.emo+' '+e.nombre;
+  $('#btnOtraVez').style.display='none'; $('#hintExp').style.display='block';
+  if(e.tipo==='agua'){
+    mostrarEscena('agua'); resetAgua(); expTapHandler=aguaTap;
+    $('#hintExp').textContent='👆 Toca para meter la mano';
+    decir('Toca la pantalla para meter la mano en el agua.');
+  } else {
+    mostrarEscena('espuma'); resetReaccion(); expTapHandler=pourFoam;
+    $('#hintExp').textContent='👆 Toca la botella';
+    decir('¡Toca la botella para hacer la espuma mágica!');
+  }
+}
+function mostrarEscena(t){
+  $('#escenaEspuma').style.display=(t==='espuma')?'block':'none';
+  $('#escenaAgua').style.display=(t==='agua')?'block':'none';
+}
+function resetReaccion(){
+  $('#foam').innerHTML='';
+  const liq=$('#liquido'); liq.setAttribute('height','0'); liq.setAttribute('y','305');
+  $('#botella').classList.remove('verter');
+  $('#chorro').classList.remove('activo');
+  $('#hintExp').style.display='block';
+  $('#btnOtraVez').style.display='none';
+  reaccionLista=true;
+}
+function pourFoam(){
+  if(!reaccionLista) return; reaccionLista=false;
+  $('#hintExp').style.display='none';
+  $('#botella').classList.add('verter');
+  beep(280,.25,'sawtooth',.12);
+  setTimeout(()=>{ $('#chorro').classList.add('activo'); beep(200,.5,'sine',.1); },650);
+  setTimeout(animLiquido,950);
+  setTimeout(()=>{ $('#chorro').classList.remove('activo'); $('#botella').classList.remove('verter');
+    erupcionFoam(); },1600);
+}
+function animLiquido(){
+  const liq=$('#liquido'); let h=0; const maxH=60;
+  const iv=setInterval(()=>{ h+=4; if(h>=maxH){h=maxH; clearInterval(iv);}
+    liq.setAttribute('height',h); liq.setAttribute('y',305-h); },40);
+}
+function erupcionFoam(){
+  decir('¡Mira la espuma mágica!');
+  const foam=$('#foam'), cols=expReac.espumaColores, dur=2600, t0=Date.now();
+  const iv=setInterval(()=>{
+    const t=Math.min((Date.now()-t0)/dur,1);
+    for(let k=0;k<4;k++){
+      const b=document.createElement('div'); b.className='fb';
+      const spreadX=14+t*22;
+      const x=50+(Math.random()-.5)*spreadX*2;
+      const y=46-Math.random()*16 + t*(Math.random()*40);
+      const s=10+Math.random()*18;
+      b.style.cssText=`left:${x}%;top:${y}%;width:${s}px;height:${s}px;`+
+        `background:${cols[Math.floor(Math.random()*cols.length)]};animation-delay:${Math.random()*.15}s`;
+      foam.appendChild(b);
+    }
+    if(Math.random()<.5) beep(430+Math.random()*480,.07,'sine',.07);
+    if((Date.now()-t0)>=dur){ clearInterval(iv);
+      setTimeout(()=>{ decir('¡Lo lograste, pequeño científico!');
+        $('#btnOtraVez').style.display='inline-block'; },500);
+    }
+  },90);
+}
+let expTapHandler=null;
+$('#labStage').addEventListener('click',()=>{ if(expTapHandler) expTapHandler(); });
+$('#btnOtraVez').onclick=()=>{
+  $('#hintExp').style.display='block'; $('#btnOtraVez').style.display='none';
+  if(expReac && expReac.tipo==='agua'){ resetAgua();
+    $('#hintExp').textContent='👆 Toca para meter la mano'; decir('¡Otra vez!'); }
+  else { resetReaccion();
+    $('#hintExp').textContent='👆 Toca la botella'; decir('¡Otra vez! Toca la botella.'); }
+};
+$('#btnVolverExp').onclick=()=>ir('experimentos');
+
+/* ----- Reacción 2D: Agua que no moja ----- */
+let manoPaso=0;
+function resetAgua(){
+  manoPaso=0;
+  $('#manoG').classList.remove('metida');
+  $('#destellos').style.display='none';
+  const o=$('#onda'); if(o) o.setAttribute('opacity','0');
+}
+function aguaTap(){
+  if(manoPaso>=2) return;
+  manoPaso++;
+  if(manoPaso===1){
+    $('#manoG').classList.add('metida'); beep(300,.25,'sine',.12);
+    const o=$('#onda'); if(o){ o.setAttribute('opacity','.6');
+      setTimeout(()=>o.setAttribute('opacity','0'),600); }
+    $('#hintExp').textContent='👆 Toca para sacar la mano';
+    decir('Metemos la mano en el agua...');
+  } else if(manoPaso===2){
+    $('#manoG').classList.remove('metida'); beep(420,.2,'sine',.1);
+    setTimeout(()=>{ $('#destellos').style.display='block'; beep(760,.3,'sine',.12);
+      $('#hintExp').style.display='none';
+      decir('¡Mira! La mano salió seca. ¡El agua no la mojó!');
+      $('#btnOtraVez').style.display='inline-block'; },800);
+  }
+}
+
+/* ================== ZONA DE CALMA ================== */
+const cb=$('#lienzoBurbujas'), ctxB=cb.getContext('2d');
+const cd=$('#lienzoDibujo'), ctxD=cd.getContext('2d');
+let burbujas=[], animCalma=null, modoDibujo=false;
+function resize(){ [cb,cd].forEach(c=>{c.width=innerWidth;c.height=innerHeight;}); }
+addEventListener('resize',resize);
+function nuevaBurbuja(){
+  const r=24+Math.random()*46;
+  return {x:Math.random()*innerWidth, y:innerHeight+r, r,
+    vy:-(.6+Math.random()*1.1), vx:(Math.random()-.5)*.6,
+    hue:Math.random()*360, fase:Math.random()*6};
+}
+function iniciarCalma(){
+  resize(); burbujas=Array.from({length:14},nuevaBurbuja);
+  $('#lienzoDibujo').style.display='none'; modoDibujo=false;
+  $('#btnLimpiar').style.display='none';
+  cancelAnimationFrame(animCalma); loopCalma();
+}
+function loopCalma(){
+  ctxB.clearRect(0,0,cb.width,cb.height);
+  burbujas.forEach(b=>{
+    b.y+=b.vy; b.x+=b.vx+Math.sin((b.y+b.fase*40)/60)*.4;
+    if(b.y<-b.r){ Object.assign(b,nuevaBurbuja()); }
+    const g=ctxB.createRadialGradient(b.x-b.r/3,b.y-b.r/3,b.r/6,b.x,b.y,b.r);
+    g.addColorStop(0,'rgba(255,255,255,.9)');
+    g.addColorStop(.4,`hsla(${b.hue},90%,75%,.55)`);
+    g.addColorStop(1,`hsla(${b.hue},90%,65%,.25)`);
+    ctxB.beginPath(); ctxB.arc(b.x,b.y,b.r,0,7); ctxB.fillStyle=g; ctxB.fill();
+    ctxB.strokeStyle='rgba(255,255,255,.6)'; ctxB.stroke();
+  });
+  animCalma=requestAnimationFrame(loopCalma);
+}
+cb.addEventListener('pointerdown',ev=>{
+  if(modoDibujo)return;
+  for(let i=burbujas.length-1;i>=0;i--){
+    const b=burbujas[i], d=Math.hypot(ev.clientX-b.x,ev.clientY-b.y);
+    if(d<b.r){ pop(); Object.assign(b,nuevaBurbuja()); b.y=innerHeight+b.r; break; }
+  }
+});
+$('#btnModoBurbujas').onclick=()=>{ modoDibujo=false; $('#lienzoDibujo').style.display='none';
+  $('#btnLimpiar').style.display='none'; };
+$('#btnModoDibujo').onclick=()=>{ modoDibujo=true; resize();
+  $('#lienzoDibujo').style.display='block'; $('#btnLimpiar').style.display='inline-block';
+  decir('Dibuja con tu dedo'); };
+$('#btnLimpiar').onclick=()=>ctxD.clearRect(0,0,cd.width,cd.height);
+let pintando=false,colD=0;
+cd.addEventListener('pointerdown',e=>{pintando=true; colD=(colD+40)%360; ctxD.beginPath(); ctxD.moveTo(e.clientX,e.clientY); beep(500,.08);});
+cd.addEventListener('pointermove',e=>{ if(!pintando)return;
+  ctxD.lineWidth=16; ctxD.lineCap='round'; ctxD.strokeStyle=`hsl(${colD},85%,60%)`;
+  ctxD.lineTo(e.clientX,e.clientY); ctxD.stroke(); });
+addEventListener('pointerup',()=>pintando=false);
+
+/* ================== CASA CON FAMILIA ================== */
+const CASA=[
+  {emo:'📦', nombre:'Laboratorio de cartón',
+   mats:['Caja de cartón','Pintura','Pegamento','Figuras'], yt:''},
+  {emo:'🫧', nombre:'Slime casero',
+   mats:['Goma escolar','Bicarbonato','Agua','Colorante'], yt:''},
+  {emo:'♻️', nombre:'Maqueta reciclada',
+   mats:['Botellas','Tapas','Tijeras','Cinta'], yt:''},
+];
+const gridCasa=$('#gridCasa');
+CASA.forEach(c=>{
+  const d=document.createElement('div'); d.className='expCard';
+  d.innerHTML=`<span class="emo">${c.emo}</span>${c.nombre}`;
+  d.onclick=()=>{ pop(); abrirCasa(c); };
+  gridCasa.appendChild(d);
+});
+function abrirCasa(c){
+  $('#padresTitulo').textContent=c.emo+' '+c.nombre;
+  $('#padresTexto').textContent='Reúnan estos materiales y vean el video juntos para construirlo en familia.';
+  $('#padresMats').innerHTML=c.mats.map(m=>`<li>${m}</li>`).join('');
+  $('#btnPadresEmpezar').onclick=()=>{
+    $('#overlayPadres').classList.remove('activa');
+    mostrarVideoCasa(c);
+  };
+  $('#overlayPadres').classList.add('activa');
+}
+function mostrarVideoCasa(c){
+  ir('casa');
+  gridCasa.style.display='none';
+  let box=$('#casaVideo');
+  if(!box){ box=document.createElement('div'); box.id='casaVideo';
+    box.style.cssText='display:flex;flex-direction:column;align-items:center;gap:16px';
+    $('#casa').appendChild(box); }
+  box.style.display='flex';
+  box.innerHTML=`<h2 class="tituloSec">${c.emo} ${c.nombre}</h2>
+    <div class="videoBox">🎥 Aquí irá el video de YouTube<br>del experimento "${c.nombre}"</div>
+    <button class="btn verde" id="volverCasa">◀ Volver</button>`;
+  $('#volverCasa').onclick=()=>{ box.style.display='none'; gridCasa.style.display='grid'; };
+}
+
+ir('inicio');
+</script>
+</body>
+</html>
