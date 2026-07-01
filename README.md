@@ -1,29 +1,46 @@
 # 🌈🧪 El mundo de Yami — Pequeños científicos
 
-Recurso educativo interactivo (TIC) para niños de **0 a 3 años**. Los pequeños entran al mundo mágico de Yami para convertirse en pequeños científicos: construyen su laboratorio, hacen experimentos sencillos, se relajan en la zona de calma y exploran experiencias para hacer en casa con la familia.
+Recurso educativo digital interactivo para niños de 0 a 3 años (primer ciclo de educación inicial), guiado por el avatar de Yami.
 
-## ▶️ Cómo se juega
+## 🎯 Problema que resuelve
 
-1. Pantalla de inicio con el botón **EMPEZAR** (fondo de espacio).
-2. Video de presentación de Yami.
-3. Menú: al elegir una sección, Yami **se cambia de ropa** y te saluda con su voz.
-   - 🔬 **Experimentos mágicos** (científica)
-   - 🫧 **Zona de calma** (pijama)
-   - 🏠 **En casa con la familia** (carpintera)
-4. Cada experimento empieza con una **pestaña para los papás**, y luego el niño **toca** los objetos (no arrastra) para hacer el experimento.
+Familias y docentes de primer ciclo carecen de orientación y materiales creativos para estimular la exploración sensorial y la expresión de emociones en los más pequeños. **El mundo de Yami** responde a ese problema usando lo digital como *complemento motivador*: cada experiencia del juego guía hacia una experiencia concreta y sensorial con materiales reales, acompañada por el adulto.
 
-Diseñado para esa edad: botones grandes, todo a un toque, con voz y sonidos, y sin pantallas de "perdiste".
+## 💡 Propuesta pedagógica
 
-## 🛠️ Tecnología
+- **Lo digital es complemento, no protagonista:** cada experimento termina con la invitación "¡Hazlo de verdad!", con lista de materiales reales y un consejo para el adulto.
+- **Orientación a las familias:** antes de cada actividad aparece un panel "Para los papás" con guía breve.
+- **Expresión de emociones:** el experimento estrella, *Monstruos de emociones*, ayuda al niño a reconocer y nombrar emociones (alegría, enojo, miedo, tristeza, asco).
+- **Hábitos de cuidado:** *Manos limpias* trabaja la higiene con el clásico experimento de la pimienta y el jabón.
+- **Adaptado a 0–3 años:** todo funciona con un toque (sin arrastrar), botones grandes, guía por voz, nunca se pierde y siempre se celebra el logro.
 
-Hecho con **HTML, CSS y JavaScript** puros. Funciona en cualquier navegador moderno. La voz de Yami usa la síntesis de voz del navegador (Web Speech API).
+## 🔬 Contenido
+
+**7 experimentos interactivos:** Monstruos de emociones · Agua que no moja · Flor mágica · Manos limpias · Nube que llueve · Día y noche · El pez que se infla.
+
+**Zona de calma:** burbujas, dibujo libre, slime mágico y juego de luces con sonidos suaves.
+
+**En casa con la familia:** proyectos con materiales reciclados para construir en familia.
+
+## 🔗 Enlaces directos (para tarjetas QR)
+
+El recurso combina lo físico y lo digital: se pueden imprimir tarjetas con códigos QR que abren directamente cada actividad.
+
+- `#exp=monstruos` · `#exp=agua` · `#exp=flor` · `#exp=manos` · `#exp=nube` · `#exp=dianoche` · `#exp=pez`
+- `#calma` · `#casa`
+
+Ejemplo: `https://TU-USUARIO.github.io/mundo-de-yami/#exp=flor`
+
+## 🚀 Cómo usarlo
+
+Abrir `index.html` en cualquier navegador moderno (doble clic), o publicarlo gratis con GitHub Pages. Funciona en computadora, tablet y celular. La voz de Yami usa la síntesis de voz del navegador en español.
 
 ## 📁 Estructura
 
 ```
-index.html          → el juego completo
-assets/img/         → avatar de Yami (4 atuendos)
-assets/video/       → video de espacio + presentación
+index.html          → todo el juego (HTML + CSS + JavaScript)
+assets/img/         → avatar de Yami y sus atuendos
+assets/video/       → video de fondo e intro
 assets/audio/       → música de fondo
 ```
 
@@ -31,6 +48,4 @@ assets/audio/       → música de fondo
 
 - Avatar de Yami: ilustración propia.
 - Video de espacio: stock gratuito.
-- ⚠️ *Pendiente:* reemplazar la música de fondo por una pista libre de derechos (royalty-free) antes de publicar ampliamente.
-
-Proyecto educativo en desarrollo. 💛
+- ⚠️ *Pendiente:* reemplazar la música de fondo por una pista libre de derechos antes de publicar ampliamente.
