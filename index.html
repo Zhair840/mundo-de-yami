@@ -90,6 +90,11 @@
   .labDeco{position:absolute; inset:0; pointer-events:none; z-index:0; opacity:.9}
   .labDeco svg{width:100%; height:100%}
   #experimentos,#mesa,#expReaccion{background:linear-gradient(180deg,#e8e0ff 0%,#dff3ff 55%,#fdeaf5 100%)}
+  body.conFondos #experimentos, body.conFondos #mesa, body.conFondos #expReaccion{
+    background:url('assets/img/fondo-lab.jpg') center/cover no-repeat}
+  body.conFondos #casa{background:url('assets/img/fondo-casa.jpg') center/cover no-repeat}
+  body.conFondos #calma{background:url('assets/img/fondo-calma.jpg') center/cover no-repeat}
+  body.conFondos .labDeco{display:none}
   #experimentos>*:not(.labDeco), #mesa>*:not(.labDeco), #expReaccion>*:not(.labDeco){position:relative; z-index:1}
   #calma{background:linear-gradient(180deg,#1b1740,#3a2d6b 60%,#5b4a91)}
   #casa{background:linear-gradient(180deg,#fff3d6,#ffe3ef)}
@@ -254,11 +259,11 @@
   <div class="panelSel">
     <img class="yamiSel" id="yamiSel" src="assets/img/yami-base.png" alt="Yami">
     <div class="tarjetas">
-      <div class="cardSel" data-sec="exp" data-ropa="cientifica" data-frase="¡Listo para experimentar!">
+      <div class="cardSel" data-sec="exp" data-ropa="cientifica" data-voz="experimentar" data-frase="¡Listo para experimentar!">
         <span class="emo">🔬</span><span>Experimentos mágicos</span></div>
-      <div class="cardSel" data-sec="calma" data-ropa="pijama" data-frase="Hora de relajarnos">
+      <div class="cardSel" data-sec="calma" data-ropa="pijama" data-voz="relajarnos" data-frase="Hora de relajarnos">
         <span class="emo">🫧</span><span>Zona de calma</span></div>
-      <div class="cardSel" data-sec="casa" data-ropa="carpintera" data-frase="¡Hora de construir!">
+      <div class="cardSel" data-sec="casa" data-ropa="carpintera" data-voz="construir" data-frase="¡Hora de construir!">
         <span class="emo">🏠</span><span>En casa con la familia</span></div>
     </div>
   </div>
@@ -671,7 +676,7 @@ $('#btnEmpezar').onclick=()=>{
 function finIntro(){
   const v=$('#vidIntro'); v.pause();
   if(!musOn) musToggle();
-  ir('seleccion'); decir('¿A dónde vamos hoy?');
+  ir('seleccion'); decir('¿A dónde vamos hoy?','adondevamos');
 }
 $('#btnIntroSig').onclick=finIntro;
 
@@ -685,13 +690,13 @@ document.querySelectorAll('.cardSel').forEach(c=>{
     $('#yamiSel').src='assets/img/yami-'+c.dataset.ropa+'.png';
     $('#yamiSel').style.transform='scale(1.06)';
     setTimeout(()=>$('#yamiSel').style.transform='',300);
-    pop(); decir(c.dataset.frase);
+    pop(); decir(c.dataset.frase, c.dataset.voz);
     const b=$('#btnSelEmpezar'); b.style.opacity='1'; b.style.pointerEvents='auto';
   };
 });
 $('#btnSelEmpezar').onclick=()=>{
   if(seccionSel==='exp') ir('experimentos');
-  else if(seccionSel==='calma'){ ir('calma'); iniciarCalma(); decir('Hora de relajarnos. Toca las burbujas.'); }
+  else if(seccionSel==='calma'){ ir('calma'); iniciarCalma(); decir('Toca las burbujas.','burbujas'); }
   else if(seccionSel==='casa') ir('casa');
 };
 
@@ -810,7 +815,7 @@ function abrirReal(e){
   $('#realConsejo').textContent=e.consejo;
   $('#realVideo').innerHTML=e.ytReal ? videoYT(e.ytReal) : '';
   $('#overlayReal').classList.add('activa');
-  decir('¡Ahora hazlo de verdad con mamá o papá! Mira el video.');
+  decir('¡Ahora hazlo de verdad con mamá o papá! Mira el video.','hazlo');
 }
 $('#btnRealListo').onclick=()=>{ $('#overlayReal').classList.remove('activa');
   $('#realVideo').innerHTML=''; };
@@ -824,7 +829,7 @@ function iniciarMesa(e){
   $('#btnHacerExp').style.display='none';
   let juntados=0; const total=e.objetos.length;
   $('#contadorMesa').textContent=`Toca los objetos ✨ (0/${total})`;
-  decir('Toca cada objeto para ponerlo en la mesa.');
+  decir('Toca cada objeto para ponerlo en la mesa.','mesa');
   e.objetos.forEach((o,i)=>{
     const fig=ICONS[o.icon]||'';
     const mv=document.createElement('div');
@@ -837,12 +842,12 @@ function iniciarMesa(e){
     mv.addEventListener('click',()=>{
       if(mv.classList.contains('guardado'))return;
       mv.classList.add('guardado'); slot.classList.add('puesto');
-      pop(); decir('¡'+o.nombre+'!'); juntados++;
+      pop(); decir('¡Muy bien!','muybien'); juntados++;
       $('#contadorMesa').textContent=`¡Muy bien! (${juntados}/${total})`;
       if(juntados===total){
         $('#contadorMesa').textContent='¡Mesa lista! 🎉';
         $('#btnHacerExp').style.display='inline-block';
-        decir('¡Mesa lista! Ahora toca el botón para hacer el experimento.');
+        decir('¡Mesa lista! Ahora toca el botón para hacer el experimento.','mesalista');
       }
     });
     zona.appendChild(mv);
@@ -865,9 +870,9 @@ function irEscena(e){
 $('#labStage').addEventListener('click',ev=>{ if(tapHandler) tapHandler(ev); });
 $('#btnVolverExp').onclick=()=>ir('experimentos');
 $('#btnOtraVez').onclick=()=>{ pop(); irEscena(expActual); };
-function lograste(fraseExtra){
+function lograste(fraseExtra,vozKey){
   confeti(); beep(523,.18); setTimeout(()=>beep(659,.18),180); setTimeout(()=>beep(784,.3),360);
-  decir((fraseExtra||'¡Lo lograste, pequeño científico!')+' ¿Quieres hacerlo de verdad en casa?');
+  decir((fraseExtra||'¡Lo lograste, pequeño científico!')+' ¿Quieres hacerlo de verdad en casa?', vozKey||'lograste');
   $('#hintExp').style.display='none';
   $('#btnOtraVez').style.display='inline-block';
   $('#btnHazlo').style.display='inline-block';
@@ -875,22 +880,27 @@ function lograste(fraseExtra){
 
 /* ----- 🌈 Monstruos de emociones ----- */
 const MONSTRUOS=[
-  {col:'#ff4d4d', borde:'#c62828', emocion:'enojado', frase:'¡El monstruo rojo está enojado! Grrr. ¿Tú qué haces cuando te enojas?', anim:'tiembla',
+  {col:'#ff4d4d', borde:'#c62828', emocion:'enojado', voz:'mon-rojo', img:'assets/img/monstruo-rojo.png',
+   frase:'¡El monstruo rojo está enojado! Grrr. ¿Tú qué haces cuando te enojas?', anim:'tiembla',
    cara:`<circle cx="0" cy="0" r="4.5" fill="#3a2a4d"/><circle cx="26" cy="0" r="4.5" fill="#3a2a4d"/>
         <path d="M-9 -12 L7 -6 M35 -12 L19 -6" stroke="#3a2a4d" stroke-width="3.4" stroke-linecap="round"/>
         <path d="M-2 16 Q13 8 28 16" stroke="#3a2a4d" stroke-width="3.4" fill="none" stroke-linecap="round"/>`},
-  {col:'#ffd84d', borde:'#e0a92e', emocion:'feliz', frase:'¡El monstruo amarillo está feliz! Ja, ja. ¿Qué te hace feliz a ti?', anim:'saltito',
+  {col:'#ffd84d', borde:'#e0a92e', emocion:'feliz', voz:'mon-amarillo', img:'assets/img/monstruo-amarillo.png',
+   frase:'¡El monstruo amarillo está feliz! Ja, ja. ¿Qué te hace feliz a ti?', anim:'saltito',
    cara:`<circle cx="0" cy="0" r="4.5" fill="#3a2a4d"/><circle cx="26" cy="0" r="4.5" fill="#3a2a4d"/>
         <path d="M-4 10 Q13 26 30 10" stroke="#3a2a4d" stroke-width="3.4" fill="none" stroke-linecap="round"/>`},
-  {col:'#76d275', borde:'#3e8e41', emocion:'con asco', frase:'¡El monstruo verde siente asco! ¡Guácala! ¿Qué comida no te gusta?', anim:'tiembla',
+  {col:'#76d275', borde:'#3e8e41', emocion:'con asco', voz:'mon-verde', img:'assets/img/monstruo-verde.png',
+   frase:'¡El monstruo verde siente asco! ¡Guácala! ¿Qué comida no te gusta?', anim:'tiembla',
    cara:`<path d="M-6 -2 Q0 -8 6 -2 M20 -2 Q26 -8 32 -2" stroke="#3a2a4d" stroke-width="3.4" fill="none" stroke-linecap="round"/>
         <path d="M0 14 Q8 10 13 14 Q18 18 26 14" stroke="#3a2a4d" stroke-width="3.4" fill="none" stroke-linecap="round"/>
         <ellipse cx="13" cy="21" rx="6" ry="4" fill="#ff8fc7"/>`},
-  {col:'#b388ff', borde:'#7c4dff', emocion:'con miedo', frase:'¡El monstruo morado tiene miedo! Oh, oh. Un abrazo lo ayuda. ¿A ti qué te da miedito?', anim:'tiembla',
+  {col:'#b388ff', borde:'#7c4dff', emocion:'con miedo', voz:'mon-morado', img:'assets/img/monstruo-morado.png',
+   frase:'¡El monstruo morado tiene miedo! Oh, oh. Un abrazo lo ayuda. ¿A ti qué te da miedito?', anim:'tiembla',
    cara:`<circle cx="0" cy="0" r="6" fill="#fff"/><circle cx="0" cy="0" r="3.4" fill="#3a2a4d"/>
         <circle cx="26" cy="0" r="6" fill="#fff"/><circle cx="26" cy="0" r="3.4" fill="#3a2a4d"/>
         <ellipse cx="13" cy="15" rx="5.4" ry="7" fill="#3a2a4d"/>`},
-  {col:'#5cc8ff', borde:'#1e88c9', emocion:'triste', frase:'El monstruo azul está triste. Snif, snif. Un cariñito lo pone mejor. ¿Qué te pone triste?', anim:'',
+  {col:'#5cc8ff', borde:'#1e88c9', emocion:'triste', voz:'mon-azul', img:'assets/img/monstruo-azul.png',
+   frase:'El monstruo azul está triste. Snif, snif. Un cariñito lo pone mejor. ¿Qué te pone triste?', anim:'',
    cara:`<circle cx="0" cy="0" r="4.5" fill="#3a2a4d"/><circle cx="26" cy="0" r="4.5" fill="#3a2a4d"/>
         <path d="M-2 18 Q13 8 28 18" stroke="#3a2a4d" stroke-width="3.4" fill="none" stroke-linecap="round"/>
         <path d="M30 6 Q34 14 30 18 Q26 14 30 6" fill="#5cc8ff" stroke="#1e88c9" stroke-width="1.6"/>`},
@@ -902,10 +912,11 @@ function monsterSVG(m, s){
     <g transform="translate(0,0)">${m.cara}</g></g></svg>`;
 }
 let monOcupado=false, monPrimera=true;
+MONSTRUOS.forEach(m=>{ const im=new Image(); im.onload=()=>m.imgOk=true; im.src=m.img; });
 function iniMon(){
   $('#escMon').classList.add('on');
   $('#hintExp').textContent='👆 ¿Cómo te sientes hoy? Toca un monstruo';
-  decir('¿Cómo te sientes hoy? Toca un monstruo de color.');
+  decir('¿Cómo te sientes hoy? Toca un monstruo de color.','mon-intro');
   $('#liqMon').setAttribute('height','0'); $('#liqMon').setAttribute('y','312');
   $('#caraMon').setAttribute('opacity','0'); $('#caraMon').innerHTML='';
   $('#foamM').innerHTML='';
@@ -913,7 +924,10 @@ function iniMon(){
   const row=$('#monsRow'); row.style.display='flex'; row.innerHTML='';
   MONSTRUOS.forEach((m,i)=>{
     const b=document.createElement('button');
-    b.className='monBtn'; b.innerHTML=monsterSVG(m);
+    b.className='monBtn';
+    b.innerHTML=m.imgOk
+      ? `<img src="${m.img}" style="width:100%;height:100%;object-fit:contain;animation:${m.anim||'flota'} ${m.anim?'.7s':'3s'} ease-in-out infinite" alt="${m.emocion}">`
+      : monsterSVG(m);
     b.onclick=ev=>{ ev.stopPropagation(); elegirMon(m,b); };
     row.appendChild(b);
   });
@@ -925,7 +939,7 @@ function elegirMon(m,btn){
   $('#hintExp').style.display='none';
   $('#foamM').innerHTML='';
   $('#caraMon').setAttribute('opacity','0');
-  decir(m.frase); beep(300,.3,'sawtooth',.1);
+  decir(m.frase, m.voz); beep(300,.3,'sawtooth',.1);
   const liq=$('#liqMon'); liq.setAttribute('fill',m.col);
   let h=0; const iv=setInterval(()=>{ h+=5; if(h>=70){h=70; clearInterval(iv); erupcionMon(m);}
     liq.setAttribute('height',h); liq.setAttribute('y',312-h); },45);
@@ -946,7 +960,9 @@ function erupcionMon(m){
     if((Date.now()-t0)>=dur){
       clearInterval(iv);
       const cara=$('#caraMon');
-      cara.innerHTML=`<g transform="translate(180,118) scale(1.35)"><g transform="translate(-13,0)">
+      cara.innerHTML=m.imgOk
+        ? `<image href="${m.img}" x="110" y="24" width="140" height="140"/>`
+        : `<g transform="translate(180,118) scale(1.35)"><g transform="translate(-13,0)">
         <path d="M-22 34 Q-30 -14 -8 -32 Q13 -48 34 -32 Q56 -14 48 34 L40 27 L34 36 L26 27 L18 36 L10 27 L2 36 L-6 27 L-14 36 Z"
           fill="${m.col}" stroke="${m.borde}" stroke-width="3"/>${m.cara}</g></g>`;
       cara.setAttribute('opacity','1');
@@ -970,7 +986,7 @@ function iniAgua(){
   $('#manoA').style.transform='';
   $('#brillosA').style.display='none';
   $('#hintExp').textContent='👆 Toca el talco';
-  decir('Toca el talco para espolvorearlo sobre el agua.');
+  decir('Toca el talco para espolvorearlo sobre el agua.','agua-intro');
   tapHandler=aguaTap;
 }
 function aguaTap(){
@@ -982,18 +998,18 @@ function aguaTap(){
     setTimeout(()=>{ $('#capaTalco').setAttribute('opacity','.95'); },1100);
     setTimeout(()=>{ $('#polvoCae').setAttribute('opacity','0'); $('#talcoBote').style.transform='';
       $('#hintExp').textContent='👆 Toca para meter la mano';
-      decir('¡Listo! El agua tiene su capa mágica. Ahora toca para meter la mano.');
+      decir('¡Listo! El agua tiene su capa mágica. Ahora toca para meter la mano.','agua-capa');
       aguaPaso=2; },1700);
   } else if(aguaPaso===2){
     aguaPaso=3;
     $('#manoA').style.transform='translateY(130px)'; beep(300,.25,'sine',.12);
     $('#hintExp').textContent='👆 Toca para sacar la mano';
-    decir('Metemos la mano en el agua...');
+    decir('Metemos la mano en el agua...','agua-mano');
   } else if(aguaPaso===3){
     aguaPaso=4;
     $('#manoA').style.transform=''; beep(420,.2,'sine',.1);
     setTimeout(()=>{ $('#brillosA').style.display='block'; beep(760,.3,'sine',.12);
-      lograste('¡Mira! La mano salió seca. ¡El talco mágico la protegió!'); },900);
+      lograste('¡Mira! La mano salió seca. ¡El talco mágico la protegió!','agua-fin'); },900);
   }
 }
 
@@ -1009,7 +1025,7 @@ function iniFlor(){
   $('#gotasR').setAttribute('opacity','0');
   $('#mariposa1').setAttribute('opacity','0'); $('#mariposa2').setAttribute('opacity','0');
   $('#hintExp').textContent='👆 Toca para sembrar la semilla';
-  decir('Toca la pantalla para sembrar la semilla.');
+  decir('Toca la pantalla para sembrar la semilla.','flor-intro');
   tapHandler=florTap;
 }
 function regar(cb){
@@ -1028,12 +1044,12 @@ function florTap(){
     beep(340,.2,'sine',.15);
     setTimeout(()=>{ s.setAttribute('opacity','0'); pop();
       $('#hintExp').textContent='👆 Toca para regar';
-      decir('¡Semillita plantada! Ahora toca para regarla.');
+      decir('¡Semillita plantada! Ahora toca para regarla.','flor-semilla');
       florPaso=2; },900);
   } else if(florPaso===2){
     florPaso=3;
     regar(()=>{ $('#tallo').style.transform='scaleY(.55)';
-      decir('¡Mira, está creciendo! Riégala otra vez.');
+      decir('¡Mira, está creciendo! Riégala otra vez.','flor-crece');
       $('#hintExp').textContent='👆 Riega otra vez';
       florPaso=4; });
   } else if(florPaso===4){
@@ -1041,7 +1057,7 @@ function florTap(){
     regar(()=>{ $('#tallo').style.transform='scaleY(1)';
       setTimeout(()=>{ $('#florG').style.transform='scale(1)'; beep(784,.4,'sine',.15);
         setTimeout(()=>{ $('#mariposa1').setAttribute('opacity','1'); $('#mariposa2').setAttribute('opacity','1');
-          lograste('¡La flor mágica nació! Las plantas crecen con agua y cariño.'); },700);
+          lograste('¡La flor mágica nació! Las plantas crecen con agua y cariño.','flor-fin'); },700);
       },800); });
   }
 }
@@ -1064,7 +1080,7 @@ function iniManos(){
   $('#manosOk').setAttribute('opacity','0');
   manosListo=true;
   $('#hintExp').textContent='👆 Toca el plato con el jabón';
-  decir('Los puntitos son gérmenes. ¡Toca el plato con el jabón para espantarlos!');
+  decir('Los puntitos son gérmenes. ¡Toca el plato con el jabón para espantarlos!','manos-intro');
   tapHandler=manosTap;
 }
 function manosTap(){
@@ -1079,7 +1095,7 @@ function manosTap(){
   setTimeout(()=>beep(800,.3,'sine',.1),400);
   setTimeout(()=>{
     $('#manosOk').setAttribute('opacity','1');
-    lograste('¡Los gérmenes huyeron del jabón! Por eso nos lavamos las manos.');
+    lograste('¡Los gérmenes huyeron del jabón! Por eso nos lavamos las manos.','manos-fin');
   },1400);
 }
 
@@ -1094,7 +1110,7 @@ function iniNube(){
   $('#aguaNube').style.opacity='.25'; $('#aguaNube').setAttribute('fill','#5cc8ff');
   $('#gotasN').innerHTML='';
   $('#hintExp').textContent='👆 Toca el gotero';
-  decir('Toca el gotero para ponerle gotitas azules a la nube.');
+  decir('Toca el gotero para ponerle gotitas azules a la nube.','nube-intro');
   tapHandler=nubeTap;
 }
 function nubeTap(){
@@ -1112,15 +1128,15 @@ function nubeTap(){
     $('#goteroG').style.transform='';
     $('#nubeTinte').setAttribute('opacity', (nubeGotas*.22)+'');
     if(nubeGotas<3){
-      decir(nubeGotas===1?'¡Una gotita! Ponle más.':'¡Otra gotita! Una más.');
+      decir(nubeGotas===1?'¡Una gotita! Ponle más.':'¡Otra gotita! Una más.', nubeGotas===1?'nube-una':'nube-otra');
       nubeOcupada=false;
     } else {
-      decir('La nube está llenita... ¡mira!');
+      decir('La nube está llenita... ¡mira!','nube-llena');
       setTimeout(()=>{
         $('#lluviaG').setAttribute('opacity','1');
         $('#aguaNube').style.opacity='.85';
         beep(400,.5,'sine',.08); setTimeout(()=>beep(360,.5,'sine',.08),400);
-        setTimeout(()=>lograste('¡Está lloviendo! La nube soltó su agüita, como la lluvia de verdad.'),1600);
+        setTimeout(()=>lograste('¡Está lloviendo! La nube soltó su agüita, como la lluvia de verdad.','nube-fin'),1600);
       },700);
     }
   },1300);
@@ -1133,7 +1149,7 @@ function iniDia(){
   esDia=true; cambios=0; diaOcupado=false;
   ponDia(true,false);
   $('#hintExp').textContent='👆 Toca el cielo';
-  decir('¡Es de día! El sol brilla. Toca el cielo para ver qué pasa.');
+  decir('¡Es de día! El sol brilla. Toca el cielo para ver qué pasa.','dia-intro');
   tapHandler=diaTap;
 }
 function ponDia(dia,anim){
@@ -1151,13 +1167,13 @@ function diaTap(){
   esDia=!esDia; cambios++;
   ponDia(esDia,true);
   if(esDia){ beep(523,.15); setTimeout(()=>beep(659,.15),150); setTimeout(()=>beep(784,.25),300);
-    decir('¡Quiquiriquí! ¡Es de día! Sale el sol y jugamos.');
+    decir('¡Quiquiriquí! ¡Es de día! Sale el sol y jugamos.','dia-dia');
   } else { beep(392,.3,'sine',.15); setTimeout(()=>beep(330,.4,'sine',.12),350);
-    decir('Uuuh, uuuh. ¡Es de noche! Sale la luna y las estrellas. A dormir.');
+    decir('Uuuh, uuuh. ¡Es de noche! Sale la luna y las estrellas. A dormir.','dia-noche');
   }
   setTimeout(()=>{
     diaOcupado=false;
-    if(cambios===2) lograste('¡Descubriste el día y la noche!');
+    if(cambios===2) lograste('¡Descubriste el día y la noche!','dia-fin');
   },1600);
 }
 
@@ -1170,7 +1186,7 @@ function iniPez(){
   $('#pezG').style.transform='scale(.32)';
   $('#pezG').style.animation='';
   $('#hintExp').textContent='👆 Toca la botella';
-  decir('El pez globo está dormido. ¡Toca la botella para despertarlo!');
+  decir('El pez globo está dormido. ¡Toca la botella para despertarlo!','pez-intro');
   tapHandler=pezTap;
 }
 function pezTap(){
@@ -1183,11 +1199,11 @@ function pezTap(){
   setTimeout(()=>{
     $('#fizzP').setAttribute('opacity','0');
     if(pezEtapa<3){
-      decir(pezEtapa===1?'¡Se está inflando! Toca otra vez.':'¡Ya casi! Una vez más.');
+      decir(pezEtapa===1?'¡Se está inflando! Toca otra vez.':'¡Ya casi! Una vez más.', pezEtapa===1?'pez-inflando':'pez-casi');
       pezOcupado=false;
     } else {
       $('#pezG').style.animation='saltito 1s ease-in-out infinite';
-      lograste('¡El pez cobró vida! Las burbujitas mágicas lo inflaron.');
+      lograste('¡El pez cobró vida! Las burbujitas mágicas lo inflaron.','pez-fin');
     }
   },1500);
 }
@@ -1241,10 +1257,10 @@ cb.addEventListener('pointerdown',ev=>{
     if(d<b.r){ pop(); Object.assign(b,nuevaBurbuja()); b.y=innerHeight+b.r; break; }
   }
 });
-$('#btnModoBurbujas').onclick=()=>{ setModo('burbujas'); decir('Toca las burbujas.'); };
-$('#btnModoDibujo').onclick=()=>{ setModo('dibujo'); resize(); decir('Dibuja con tu dedo.'); };
-$('#btnModoSlime').onclick=()=>{ setModo('slime'); decir('¡Estira el slime mágico! Tócalo para cambiar su color.'); };
-$('#btnModoLuces').onclick=()=>{ setModo('luces'); decir('Toca las luces para encenderlas.'); };
+$('#btnModoBurbujas').onclick=()=>{ setModo('burbujas'); decir('Toca las burbujas.','burbujas'); };
+$('#btnModoDibujo').onclick=()=>{ setModo('dibujo'); resize(); decir('Dibuja con tu dedo.','dibuja'); };
+$('#btnModoSlime').onclick=()=>{ setModo('slime'); decir('¡Estira el slime mágico! Tócalo para cambiar su color.','slime'); };
+$('#btnModoLuces').onclick=()=>{ setModo('luces'); decir('Toca las luces para encenderlas.','luces'); };
 $('#btnLimpiar').onclick=()=>ctxD.clearRect(0,0,cd.width,cd.height);
 
 /* dibujo */
@@ -1328,7 +1344,7 @@ for(let i=0;i<12;i++){
   f.onclick=()=>{
     f.classList.toggle('on');
     if(f.classList.contains('on')){ nota(i); prendidas++;
-      if(prendidas===12){ confeti(); decir('¡Encendiste todas las luces! Qué bonito brillan.'); }
+      if(prendidas===12){ confeti(); decir('¡Encendiste todas las luces! Qué bonito brillan.','lucestodas'); }
     } else { beep(200,.15,'sine',.1); prendidas--; }
   };
   focoGrid.appendChild(f);
@@ -1375,6 +1391,13 @@ function mostrarVideoCasa(c){
     <button class="btn verde" id="volverCasa">◀ Volver</button>`;
   $('#volverCasa').onclick=()=>{ box.style.display='none'; gridCasa.style.display='grid'; };
 }
+
+/* ================== FONDOS ILUSTRADOS (si existen) ================== */
+(function(){
+  const t=new Image();
+  t.onload=()=>document.body.classList.add('conFondos');
+  t.src='assets/img/fondo-lab.jpg';
+})();
 
 /* ================== CHISPAS AL TOCAR ================== */
 document.addEventListener('pointerdown',ev=>{
