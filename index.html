@@ -3,230 +3,198 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>El mundo de Yami · Pequeños científicos</title>
+<title>Descubriendo el mundo con mis sentidos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --rosa:#ff8fc7; --rosa2:#ff5fa8; --morado:#9b7bff; --morado2:#7c5cff;
-    --crema:#fff6fb; --amarillo:#ffd84d; --verde:#76d275; --azul:#5cc8ff;
+    --amarillo:#ffd84d; --verde:#76d275; --azul:#5cc8ff; --naranja:#ffab5e;
     --texto:#3a2a4d; --sombra:0 10px 28px rgba(124,92,255,.35);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0}
   html,body{height:100%; overflow:hidden}
-  body{
-    font-family:'Fredoka','Comic Sans MS','Chalkboard SE','Segoe UI Rounded',system-ui,sans-serif;
-    color:var(--texto); background:#0a0820; user-select:none; touch-action:manipulation;
-  }
+  body{font-family:'Fredoka','Comic Sans MS','Chalkboard SE','Segoe UI Rounded',system-ui,sans-serif;
+    color:var(--texto); background:#1b1740; user-select:none; touch-action:manipulation}
   .screen{position:fixed; inset:0; display:none; flex-direction:column;
     align-items:center; justify-content:center; padding:18px; overflow:hidden}
   .screen.activa{display:flex; animation:fade .5s ease}
-  @keyframes fade{from{opacity:0; transform:scale(.98)} to{opacity:1; transform:none}}
-
-  /* ---------- VIDEO FONDO ---------- */
-  #bgEspacio{position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2}
-  #veloEspacio{position:fixed; inset:0; z-index:-1;
-    background:radial-gradient(circle at 50% 30%, rgba(20,10,60,.15), rgba(8,6,30,.78))}
+  @keyframes fade{from{opacity:0; transform:scale(.985)} to{opacity:1; transform:none}}
+  .fondoImg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0}
+  #inicio .titulo, #inicio .sub, #inicio .btn{position:relative; z-index:2}
+  #despedida .globo, #despedida .btn{position:relative; z-index:2}
+  #tacto .tituloSec, #tacto .gridTex, #gusto>*, #familia>*{position:relative; z-index:1}
 
   /* ---------- BOTONES ---------- */
-  .btn{font-family:inherit; font-weight:700; border:none; cursor:pointer;
-    color:#fff; border-radius:60px; padding:20px 42px; font-size:clamp(20px,4.5vw,30px);
+  .btn{font-family:inherit; font-weight:700; border:none; cursor:pointer; color:#fff;
+    border-radius:60px; padding:20px 42px; font-size:clamp(20px,4.5vw,30px);
     background:linear-gradient(135deg,var(--rosa),var(--rosa2)); box-shadow:var(--sombra);
     transition:transform .15s; letter-spacing:.5px}
   .btn:active{transform:scale(.93)}
-  .btn.grande{padding:26px 70px; font-size:clamp(26px,6vw,40px); animation:lat 1.6s ease-in-out infinite}
+  .btn.grande{padding:24px 64px; font-size:clamp(26px,6vw,40px); animation:lat 1.6s ease-in-out infinite}
   .btn.verde{background:linear-gradient(135deg,#8fe38d,var(--verde))}
   .btn.morado{background:linear-gradient(135deg,var(--morado),var(--morado2))}
-  .btn.amarillo{background:linear-gradient(135deg,#ffe27a,#f7b32b); color:#6b4a00}
-  .btn.chico{padding:14px 30px; font-size:20px}
+  .btn.chico{padding:12px 26px; font-size:19px}
   @keyframes lat{0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-10px) scale(1.04)}}
+  @keyframes flota{0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-16px) rotate(2deg)}}
+  @keyframes twinkle{0%,100%{opacity:.25; transform:scale(.7)} 50%{opacity:1; transform:scale(1.2)}}
+  @keyframes brinca{0%,100%{transform:translateY(0) scale(1)} 40%{transform:translateY(-18px) scale(1.12)}}
+  @keyframes tiembla{0%,100%{transform:translateX(0) rotate(0)} 25%{transform:translateX(-4px) rotate(-4deg)} 75%{transform:translateX(4px) rotate(4deg)}}
+  .volver{position:fixed; bottom:16px; left:16px; z-index:30; width:60px; height:60px; border-radius:50%;
+    border:none; cursor:pointer; font-size:28px; background:#fff; box-shadow:var(--sombra)}
+  .tituloSec{font-size:clamp(22px,4.6vw,36px); color:#fff; text-align:center;
+    text-shadow:0 2px 0 rgba(124,92,255,.7),0 6px 16px rgba(0,0,0,.35); margin-bottom:8px}
+  .hint{background:rgba(255,255,255,.92); padding:9px 22px; border-radius:30px; font-size:19px; font-weight:600;
+    box-shadow:var(--sombra); animation:lat 1.5s ease-in-out infinite}
 
   /* ---------- INICIO ---------- */
-  #inicio .titulo{color:#fff; text-align:center; text-shadow:0 4px 0 #7c5cff,0 8px 24px rgba(0,0,0,.5);
-    font-size:clamp(30px,8vw,68px); line-height:1.05; margin-bottom:6px}
-  #inicio .sub{color:#ffe7f4; font-size:clamp(16px,3.6vw,26px); text-align:center; margin-bottom:30px;
-    text-shadow:0 2px 8px rgba(0,0,0,.6)}
-  .yamiFlota{height:min(34vh,300px); filter:drop-shadow(0 12px 20px rgba(0,0,0,.4));
-    animation:flota 4s ease-in-out infinite; margin-bottom:18px}
-  @keyframes flota{0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-18px) rotate(2deg)}}
-  .estrellita{position:absolute; color:#fff; font-size:24px; opacity:.8; animation:twinkle 2s infinite}
-  @keyframes twinkle{0%,100%{opacity:.2; transform:scale(.7)} 50%{opacity:1; transform:scale(1.2)}}
+  #inicio{padding:0}
+  #vidLoop{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0}
+  #inicio .velo{position:absolute; inset:0; z-index:1;
+    background:radial-gradient(circle at 50% 40%, rgba(10,8,30,0) 30%, rgba(10,8,30,.45))}
+  #inicio .titulo{color:#fff; text-align:center; z-index:2; font-size:clamp(30px,7vw,62px); line-height:1.08;
+    text-shadow:0 4px 0 #7c5cff,0 8px 24px rgba(0,0,0,.55)}
+  #inicio .sub{color:#ffe7f4; z-index:2; font-size:clamp(16px,3.4vw,24px); margin:8px 0 26px;
+    text-shadow:0 2px 8px rgba(0,0,0,.6); text-align:center}
+  #btnComenzar{z-index:2}
 
-  /* ---------- SELECCIÓN ---------- */
-  #seleccion{background:linear-gradient(160deg,#ffd9ec,#e9ddff)}
-  .panelSel{display:flex; width:100%; max-width:1000px; gap:20px; align-items:center;
-    justify-content:center; flex-wrap:wrap}
-  .yamiSel{height:min(46vh,420px); filter:drop-shadow(0 12px 18px rgba(124,92,255,.4));
-    transition:transform .35s; animation:flota 4s ease-in-out infinite}
-  .tarjetas{display:flex; flex-direction:column; gap:16px; min-width:280px}
-  .cardSel{display:flex; align-items:center; gap:16px; background:#fff; border-radius:26px;
-    padding:18px 22px; box-shadow:0 8px 20px rgba(124,92,255,.2); cursor:pointer;
-    border:5px solid transparent; transition:transform .15s,border-color .2s; font-size:clamp(18px,3.6vw,24px); font-weight:600}
-  .cardSel:active{transform:scale(.96)}
-  .cardSel.sel{border-color:var(--rosa2); transform:scale(1.03)}
-  .cardSel .emo{font-size:40px}
-  .tituloSec{font-size:clamp(24px,5vw,40px); color:#7c5cff; text-align:center; margin-bottom:16px;
-    text-shadow:0 2px 0 #fff}
+  /* ---------- VIDEO BIENVENIDA ---------- */
+  #bienvenida{padding:0; background:#000}
+  #vidBienv{width:100%; height:100%; object-fit:contain; background:#000}
 
   /* ---------- MODALES ---------- */
-  .overlay{position:fixed; inset:0; background:rgba(40,20,60,.55); display:none;
+  .overlay{position:fixed; inset:0; background:rgba(30,20,55,.6); display:none;
     align-items:center; justify-content:center; z-index:50; padding:18px}
   .overlay.activa{display:flex; animation:fade .3s}
-  .modal{background:#fff; border-radius:30px; padding:26px 24px; max-width:520px; width:100%;
-    box-shadow:0 20px 50px rgba(0,0,0,.4); text-align:center; max-height:90vh; overflow:auto}
-  .badgePadres{display:inline-block; background:#fff0d6; color:#c98a00; font-weight:700;
-    padding:8px 18px; border-radius:30px; font-size:18px; margin-bottom:14px}
-  .badgeCasa{display:inline-block; background:#ffe3ef; color:#d63d86; font-weight:700;
-    padding:8px 18px; border-radius:30px; font-size:18px; margin-bottom:14px}
-  .modal h2{font-size:26px; color:var(--texto); margin-bottom:10px}
-  .modal p{font-size:18px; line-height:1.45; color:#5a4a6b; margin-bottom:8px}
-  .mats{background:#fff6fb; border-radius:18px; padding:14px; margin:14px 0; text-align:left}
+  .modal{background:#fff; border-radius:30px; padding:26px 24px; max-width:540px; width:100%;
+    box-shadow:0 20px 50px rgba(0,0,0,.4); text-align:center; max-height:92vh; overflow:auto}
+  .badge{display:inline-block; background:#ffe9f4; color:#d63d86; font-weight:700;
+    padding:8px 18px; border-radius:30px; font-size:17px; margin-bottom:12px}
+  .badge.fam{background:#fff0d6; color:#c98a00}
+  .modal h2{font-size:25px; margin-bottom:10px}
+  .modal p{font-size:17.5px; line-height:1.5; color:#5a4a6b; margin-bottom:10px; text-align:left}
+  .mats{background:#fff6fb; border-radius:18px; padding:13px; margin:12px 0; text-align:left}
   .mats b{color:#ff5fa8}
-  .mats ul{margin:6px 0 0 20px; font-size:17px; line-height:1.6}
+  .mats ul{margin:6px 0 0 20px; font-size:16.5px; line-height:1.55}
   .consejo{background:#eafbe9; border-radius:18px; padding:12px 14px; margin:0 0 14px;
-    font-size:16px; text-align:left; color:#3e6b2e}
-
-  /* ---------- DECORACIÓN LABORATORIO ---------- */
-  .labDeco{position:absolute; inset:0; pointer-events:none; z-index:0; opacity:.9}
-  .labDeco svg{width:100%; height:100%}
-  #experimentos,#mesa,#expReaccion{background:linear-gradient(180deg,#e8e0ff 0%,#dff3ff 55%,#fdeaf5 100%)}
-  body.conFondos #experimentos, body.conFondos #mesa, body.conFondos #expReaccion{
-    background:url('assets/img/fondo-lab.jpg') center/cover no-repeat}
-  body.conFondos #casa{background:url('assets/img/fondo-casa.jpg') center/cover no-repeat}
-  body.conFondos #calma{background:url('assets/img/fondo-calma.jpg') center/cover no-repeat}
-  body.conFondos .labDeco{display:none}
-  #experimentos>*:not(.labDeco), #mesa>*:not(.labDeco), #expReaccion>*:not(.labDeco){position:relative; z-index:1}
-  #calma{background:linear-gradient(180deg,#1b1740,#3a2d6b 60%,#5b4a91)}
-  #casa{background:linear-gradient(180deg,#fff3d6,#ffe3ef)}
-
-  /* ---------- LISTA EXPERIMENTOS ---------- */
-  .gridExp{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px;
-    width:100%; max-width:760px; margin-top:10px}
-  .expCard{background:#fff; border-radius:22px; padding:18px 12px; text-align:center; cursor:pointer;
-    box-shadow:0 6px 16px rgba(0,0,0,.12); transition:transform .15s; font-weight:600; font-size:17px}
-  .expCard:active{transform:scale(.95)}
-  .expCard .emo{font-size:44px; display:block; margin-bottom:6px}
-
-  /* ---------- MESA (preparación) ---------- */
-  #mesaWrap{position:relative; width:100%; height:100%; display:flex; flex-direction:column;
-    align-items:center; justify-content:space-between; padding:16px 10px}
-  .zonaFlote{position:relative; width:100%; flex:1}
-  .obj2d{position:absolute; width:96px; height:96px; cursor:pointer; transition:transform .15s;
-    animation:flota 3.6s ease-in-out infinite; filter:drop-shadow(0 6px 6px rgba(0,0,0,.18))}
-  .obj2d svg{width:100%; height:100%; display:block}
-  .obj2d:active{transform:scale(.88)}
-  .obj2d.guardado{display:none}
-  .mesa2d{position:relative; width:min(94%,600px); height:120px; margin-bottom:48px}
-  .mesa2d .tablero{position:absolute; top:0; left:0; width:100%; height:34px; border-radius:12px;
-    background:linear-gradient(#e6c194,#cc9c68); box-shadow:0 7px 0 #a87a4f, var(--sombra)}
-  .mesa2d .pata{position:absolute; bottom:-48px; width:18px; height:82px; border-radius:0 0 7px 7px;
-    background:linear-gradient(#caa074,#a87a4f)}
-  .mesa2d .pata.izq{left:13%} .mesa2d .pata.der{right:13%}
-  .mesaSlots{position:absolute; top:-72px; left:0; width:100%; display:flex; justify-content:center;
-    gap:8px; align-items:flex-end; pointer-events:none}
-  .slot2d{width:72px; height:78px; opacity:0; transform:translateY(10px);
-    transition:opacity .4s ease, transform .4s ease; filter:drop-shadow(0 4px 4px rgba(0,0,0,.2))}
-  .slot2d svg{width:100%; height:100%; display:block}
-  .slot2d.puesto{opacity:1; transform:translateY(0)}
-  .contador{background:#fff; padding:8px 22px; border-radius:30px; font-weight:700; font-size:20px;
-    box-shadow:var(--sombra)}
-
-  /* ---------- ESCENAS DE EXPERIMENTO ---------- */
-  .escenaExp{display:flex; flex-direction:column; align-items:center; gap:10px; width:100%}
-  .hintExp{background:#fff; padding:10px 24px; border-radius:30px; font-size:20px; font-weight:600;
-    box-shadow:var(--sombra); animation:lat 1.4s ease-in-out infinite}
-  .labStage{position:relative; width:min(92%,380px); height:min(50vh,330px)}
-  .labStage svg{width:100%; height:100%; overflow:visible}
-  .esc{position:absolute; inset:0; display:none}
-  .esc.on{display:block}
-  .botonesExp{display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center}
-  /* espuma */
-  #foamM{position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none}
-  .fb{position:absolute; border-radius:50%; opacity:0; box-shadow:inset -3px -4px 6px rgba(0,0,0,.12);
-    animation:fbPop .6s ease-out forwards}
-  @keyframes fbPop{0%{opacity:0; transform:translate(-50%,-50%) scale(.2)}
-    60%{opacity:1} 100%{opacity:1; transform:translate(-50%,-50%) scale(1)}}
-  /* monstruos */
-  .monsRow{display:flex; gap:10px; justify-content:center; margin-top:4px}
-  .monBtn{width:64px; height:64px; border:none; background:transparent; cursor:pointer;
-    transition:transform .15s; filter:drop-shadow(0 4px 6px rgba(0,0,0,.25))}
-  .monBtn:active{transform:scale(.85)}
-  .monBtn.sel{transform:scale(1.18)}
-  .monBtn svg{width:100%; height:100%}
-  @keyframes tiembla{0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)}}
-  @keyframes saltito{0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}}
-  /* transiciones genéricas dentro de svg */
-  .tr6{transition:transform .6s cubic-bezier(.5,0,.3,1)}
-  .tr9{transition:transform .9s cubic-bezier(.5,0,.3,1)}
-  .op4{transition:opacity .4s}
-  @keyframes caeGota{0%{transform:translateY(0); opacity:1} 100%{transform:translateY(56px); opacity:0}}
-  @keyframes lluevePlin{0%{transform:translateY(-6px); opacity:0} 20%{opacity:.9} 100%{transform:translateY(54px); opacity:0}}
-  @keyframes burbujita{0%{transform:translateY(0); opacity:.9} 100%{transform:translateY(-46px); opacity:0}}
-  @keyframes aleteo{0%,100%{transform:rotate(-6deg)} 50%{transform:rotate(8deg)}}
-  /* día y noche con imágenes */
-  .fondoDN{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:opacity 1.4s ease}
-  .fxCapa{position:absolute; inset:0; pointer-events:none; transition:opacity 1.2s}
-  .twk{position:absolute; color:#fff; font-size:18px; text-shadow:0 0 8px #fff; animation:twinkle 1.8s infinite}
-  .fugaz{position:absolute; top:8%; left:-8%; font-size:16px; filter:drop-shadow(0 0 6px #fff);
-    animation:fugazAnim 5.5s linear infinite}
-  @keyframes fugazAnim{0%,70%{transform:translate(0,0); opacity:0} 74%{opacity:1}
-    88%{transform:translate(380px,150px); opacity:0} 100%{transform:translate(380px,150px); opacity:0}}
-  .luci{position:absolute; width:8px; height:8px; border-radius:50%; background:#ffe98a;
-    box-shadow:0 0 12px 5px rgba(255,233,138,.8); animation:luciAnim 3.5s ease-in-out infinite}
-  @keyframes luciAnim{0%,100%{transform:translate(0,0); opacity:.25} 50%{transform:translate(14px,-20px); opacity:1}}
-  .maripo{position:absolute; font-size:22px; animation:maripoAnim 4s ease-in-out infinite}
-  @keyframes maripoAnim{0%,100%{transform:translate(0,0) rotate(-6deg)} 50%{transform:translate(18px,-16px) rotate(8deg)}}
-  #solImg{position:absolute; left:6%; top:5%; width:27%; opacity:1;
-    transition:transform 1.4s ease, opacity 1.4s; filter:drop-shadow(0 0 16px rgba(255,216,77,.75))}
-  #lunaImg{position:absolute; right:6%; top:4%; width:27%; opacity:0; transform:translateY(170px) scale(.6);
-    transition:transform 1.4s ease, opacity 1.4s; filter:drop-shadow(0 0 14px rgba(220,230,255,.75))}
-  /* chispas al tocar */
-  .chispa{position:absolute; pointer-events:none; transform:translate(-50%,-50%);
-    animation:chispaAnim .65s ease-out forwards}
-  @keyframes chispaAnim{0%{opacity:1; transform:translate(-50%,-50%) scale(.4)}
-    100%{opacity:0; transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.15)}}
-
-  /* ---------- CALMA ---------- */
-  #lienzoBurbujas,#lienzoDibujo,#lienzoSlime{position:fixed; inset:0}
-  #lienzoBurbujas{z-index:1} #lienzoDibujo{z-index:2; display:none; touch-action:none}
-  #lienzoSlime{z-index:2; display:none; touch-action:none}
-  .calmaUI{position:fixed; z-index:5; bottom:18px; left:50%; transform:translateX(-50%);
-    display:flex; gap:10px; flex-wrap:wrap; justify-content:center; max-width:96vw}
-  #lucesUI{position:fixed; inset:0; z-index:2; display:none; align-items:center; justify-content:center}
-  .focoGrid{display:grid; grid-template-columns:repeat(4,minmax(64px,90px)); gap:clamp(14px,4vw,30px)}
-  .foco{aspect-ratio:1; border-radius:50%; border:none; cursor:pointer;
-    background:radial-gradient(circle at 35% 30%, #6d639c, #453a72); box-shadow:inset 0 -4px 10px rgba(0,0,0,.4);
-    transition:all .25s; font-size:0}
-  .foco.on{background:radial-gradient(circle at 40% 35%, #fffbe0, #ffd84d 60%, #f7b32b);
-    box-shadow:0 0 34px 10px rgba(255,216,77,.65), inset 0 -3px 8px rgba(200,140,0,.3)}
-
-  /* ---------- CASA ---------- */
-  .videoBox{width:min(94%,640px); aspect-ratio:16/9; background:#000; border-radius:20px;
-    display:flex; align-items:center; justify-content:center; color:#fff; font-size:20px; text-align:center;
-    box-shadow:var(--sombra); overflow:hidden}
+    font-size:15.5px; text-align:left; color:#3e6b2e}
+  .videoBox{width:100%; aspect-ratio:16/9; background:#0b0b18; border-radius:18px; overflow:hidden;
+    display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px; margin:0 0 12px}
   .videoBox iframe{width:100%; height:100%; border:0}
 
-  /* ---------- BARRA / VARIOS ---------- */
+  /* ---------- ÁRBOL ---------- */
+  #arbol{background:linear-gradient(180deg,#cfe6ff,#eafbe9)}
+  .fruto{position:absolute; width:clamp(72px,11vw,110px); height:clamp(72px,11vw,110px); border:none;
+    border-radius:50%; cursor:pointer; font-size:clamp(34px,5.5vw,52px); color:#fff;
+    box-shadow:0 8px 18px rgba(0,0,0,.3), inset 0 -4px 8px rgba(0,0,0,.15), 0 0 0 6px rgba(255,255,255,.35);
+    animation:flota 3.6s ease-in-out infinite, glowFruto 2.4s ease-in-out infinite;
+    transition:transform .15s; z-index:2;
+    display:flex; align-items:center; justify-content:center}
+  @keyframes glowFruto{0%,100%{box-shadow:0 8px 18px rgba(0,0,0,.3), inset 0 -4px 8px rgba(0,0,0,.15), 0 0 0 5px rgba(255,255,255,.3)}
+    50%{box-shadow:0 8px 18px rgba(0,0,0,.3), inset 0 -4px 8px rgba(0,0,0,.15), 0 0 26px 10px rgba(255,255,255,.65)}}
+  .fruto:active{transform:scale(.88)}
+  .fruto small{position:absolute; bottom:-24px; left:50%; transform:translateX(-50%);
+    font-size:13px; font-weight:700; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.6); letter-spacing:.5px}
+  .hotspot{position:absolute; border:none; background:rgba(255,255,255,0); cursor:pointer;
+    border-radius:24px; z-index:2}
+  .hotspot .tag{position:absolute; bottom:6px; left:50%; transform:translateX(-50%);
+    background:rgba(255,255,255,.9); border-radius:20px; padding:4px 12px; font-size:14px; font-weight:700;
+    color:var(--texto); box-shadow:0 4px 10px rgba(0,0,0,.25); white-space:nowrap; animation:lat 2s infinite}
+  .maripo{position:absolute; z-index:2; animation:maripoAnim 4s ease-in-out infinite; pointer-events:none}
+  @keyframes maripoAnim{0%,100%{transform:translate(0,0) rotate(-6deg)} 50%{transform:translate(18px,-16px) rotate(8deg)}}
+  #yamiArbol{position:absolute; height:clamp(120px,22vh,200px); z-index:2; cursor:pointer;
+    left:4%; bottom:2%; filter:drop-shadow(0 8px 12px rgba(0,0,0,.35)); animation:flota 4s ease-in-out infinite}
+
+  /* ---------- ESCENAS SENSORIALES ---------- */
+  .sprite{position:absolute; border:none; background:transparent; cursor:pointer; z-index:3;
+    transition:transform .15s; filter:drop-shadow(0 5px 8px rgba(0,0,0,.25))}
+  .sprite:active{transform:scale(.9)}
+  .sprite svg{width:100%; height:100%; display:block; overflow:visible}
+  .sprite.brinca{animation:brinca .7s ease}
+  /* vista */
+  #tinte{position:absolute; inset:0; z-index:2; pointer-events:none; mix-blend-mode:multiply;
+    opacity:0; transition:opacity .6s}
+  .lente{position:absolute; bottom:3%; width:clamp(64px,11vw,100px); height:clamp(64px,11vw,100px);
+    border-radius:50%; border:6px solid #fff; cursor:pointer; z-index:4;
+    box-shadow:0 8px 18px rgba(0,0,0,.35), inset 0 0 24px rgba(255,255,255,.5); transition:transform .2s}
+  .lente:active{transform:scale(.9)}
+  .lente.on{transform:scale(1.15); border-color:#ffd84d}
+  #oscuro{position:absolute; inset:0; z-index:5; pointer-events:none; opacity:0; transition:opacity .4s}
+  .silueta{position:absolute; z-index:6; opacity:0; transition:opacity .25s; pointer-events:none;
+    filter:drop-shadow(0 0 6px rgba(255,255,220,.4))}
+  /* olfato */
+  .olita{position:absolute; font-size:22px; opacity:0; animation:subeAroma 1.6s ease-out forwards; pointer-events:none; z-index:4}
+  @keyframes subeAroma{0%{opacity:0; transform:translateY(0) scale(.6)} 25%{opacity:.9}
+    100%{opacity:0; transform:translateY(-90px) scale(1.2)}}
+  /* tacto */
+  .gridTex{display:grid; grid-template-columns:1fr 1fr; gap:12px; width:min(94vw,700px); height:min(66vh,520px)}
+  .tex{position:relative; border-radius:24px; overflow:hidden; box-shadow:0 10px 24px rgba(0,0,0,.35);
+    touch-action:none; background-size:cover; background-position:center}
+  .tex .etq{position:absolute; bottom:8px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,.92);
+    padding:4px 16px; border-radius:20px; font-weight:700; font-size:16px}
+  .pelusa{position:absolute; border-radius:50%; background:rgba(255,255,255,.95); pointer-events:none;
+    animation:pelusaAnim 1s ease-out forwards}
+  @keyframes pelusaAnim{0%{opacity:.95; transform:scale(.5)} 100%{opacity:0; transform:translateY(-34px) scale(1.3)}}
+  /* gusto */
+  #ruletaWrap{position:relative; width:min(56vw,300px); aspect-ratio:1}
+  #ruletaSvg{width:100%; height:100%; transition:transform 3.2s cubic-bezier(.15,.75,.25,1)}
+  #flechaR{position:absolute; top:-14px; left:50%; transform:translateX(-50%); font-size:34px; z-index:2;
+    filter:drop-shadow(0 3px 4px rgba(0,0,0,.3))}
+  #comidaPop{position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center;
+    background:rgba(30,20,55,.45)}
+  #comidaPop.on{display:flex; animation:fade .3s}
+  #comidaPop svg{width:min(64vw,300px); animation:brinca 1s ease infinite}
+  .vasosRow{display:flex; gap:14px; justify-content:center; margin-top:14px; flex-wrap:wrap}
+  .vaso{width:clamp(58px,9vw,84px); border:none; background:transparent; cursor:pointer; transition:transform .15s}
+  .vaso:active{transform:scale(.88)}
+  .vaso.wob{animation:tiembla .5s ease 2}
+  /* familia */
+  #familia{background:linear-gradient(180deg,#fff3d6,#ffe3ef)}
+  .gridFam{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:13px;
+    width:100%; max-width:740px}
+  .famCard{background:#fff; border-radius:22px; padding:16px 10px; text-align:center; cursor:pointer;
+    box-shadow:0 6px 16px rgba(0,0,0,.14); transition:transform .15s; font-weight:600; font-size:16px}
+  .famCard:active{transform:scale(.95)}
+  .famCard .emo{font-size:40px; display:block; margin-bottom:4px}
+  /* calma */
+  #lienzoBurbujas{position:absolute; inset:0; z-index:2}
+  #cieloEstrellas{position:absolute; inset:0; z-index:1}
+  .estrellaC{position:absolute; color:#fffbe0; text-shadow:0 0 12px #fff8c4; animation:twinkle 2.2s infinite; pointer-events:none}
+  .asmrBar{position:fixed; z-index:6; bottom:16px; left:50%; transform:translateX(-50%);
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+  .asmrBtn{width:58px; height:58px; border-radius:50%; border:none; cursor:pointer; font-size:26px;
+    background:rgba(255,255,255,.9); box-shadow:var(--sombra); transition:transform .15s}
+  .asmrBtn:active{transform:scale(.9)}
+  .asmrBtn.on{background:linear-gradient(135deg,#ffe27a,#f7b32b); box-shadow:0 0 22px rgba(255,216,77,.8)}
+  #ositoWrap{position:absolute; left:6%; bottom:14%; z-index:5; text-align:center; pointer-events:none}
+  #ositoSvg{width:clamp(110px,18vw,170px); animation:respira 8s ease-in-out infinite;
+    filter:drop-shadow(0 0 26px rgba(255,220,160,.55))}
+  @keyframes respira{0%,100%{transform:scale(1)} 45%,55%{transform:scale(1.14)}}
+  #ositoTxt{color:#ffe7f4; font-size:15px; font-weight:600; text-shadow:0 2px 6px rgba(0,0,0,.5); margin-top:4px}
+
+  /* ---------- DESPEDIDA ---------- */
+  #despedida .globo{background:rgba(255,255,255,.94); border-radius:26px; padding:20px 24px; max-width:560px;
+    font-size:clamp(17px,3.6vw,22px); font-weight:500; box-shadow:var(--sombra); text-align:center}
+
+  /* ---------- BARRA / EXTRAS ---------- */
   .topbar{position:fixed; top:0; left:0; right:0; z-index:40; display:flex; justify-content:space-between;
     padding:12px 16px; pointer-events:none}
   .topbar .grupoIcon{display:flex; gap:10px}
-  .iconbtn{pointer-events:auto; width:54px; height:54px; border-radius:50%; border:none; cursor:pointer;
-    font-size:24px; background:#fff; box-shadow:var(--sombra); display:flex; align-items:center; justify-content:center}
-  .yamiMini{position:fixed; bottom:0; left:10px; height:160px; z-index:5; pointer-events:none;
-    filter:drop-shadow(0 6px 10px rgba(0,0,0,.3))}
+  .iconbtn{pointer-events:auto; width:52px; height:52px; border-radius:50%; border:none; cursor:pointer;
+    font-size:23px; background:#fff; box-shadow:var(--sombra); display:flex; align-items:center; justify-content:center}
   #confeti{position:fixed; inset:0; pointer-events:none; z-index:60; overflow:hidden}
   .confe{position:absolute; top:-40px; font-size:26px; animation:caeConfe linear forwards}
   @keyframes caeConfe{to{transform:translateY(110vh) rotate(720deg)}}
+  .chispa{position:absolute; pointer-events:none; transform:translate(-50%,-50%); animation:chispaAnim .65s ease-out forwards}
+  @keyframes chispaAnim{0%{opacity:1; transform:translate(-50%,-50%) scale(.4)}
+    100%{opacity:0; transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.15)}}
 </style>
 </head>
 <body>
 
-<video id="bgEspacio" autoplay muted loop playsinline></video>
-<div id="veloEspacio"></div>
-
-<!-- BARRA SUPERIOR -->
+<!-- BARRA -->
 <div class="topbar" id="topbar" style="display:none">
-  <button class="iconbtn" id="btnHome" title="Inicio">🏠</button>
+  <button class="iconbtn" id="btnArbol" title="Árbol">🌳</button>
   <div class="grupoIcon">
     <button class="iconbtn" id="btnFull" title="Pantalla completa">⛶</button>
     <button class="iconbtn" id="btnMusica" title="Música">🔊</button>
@@ -235,388 +203,193 @@
 
 <!-- ====== INICIO ====== -->
 <section id="inicio" class="screen activa">
-  <span class="estrellita" style="top:18%;left:14%">✦</span>
-  <span class="estrellita" style="top:26%;right:18%;animation-delay:.6s">✧</span>
-  <span class="estrellita" style="top:60%;left:22%;animation-delay:1s">✦</span>
-  <span class="estrellita" style="bottom:18%;right:14%;animation-delay:.3s">✧</span>
-  <h1 class="titulo">El mundo de Yami</h1>
-  <p class="sub">🌈🧪 Pequeños científicos construyendo<br>nuestro laboratorio mágico</p>
-  <img class="yamiFlota" src="assets/img/yami-base.png" alt="Yami">
-  <button class="btn grande" id="btnEmpezar">EMPEZAR ▶</button>
+  <video id="vidLoop" src="assets/video/inicio-loop.mp4" autoplay muted loop playsinline></video>
+  <div class="velo"></div>
+  <h1 class="titulo">Descubriendo el mundo<br>con mis sentidos</h1>
+  <p class="sub">🌈 Una aventura para pequeños exploradores</p>
+  <button class="btn grande" id="btnComenzar">▶ COMENZAR</button>
 </section>
 
-<!-- ====== INTRO ====== -->
-<section id="intro" class="screen" style="padding:0; background:#000">
-  <video id="vidIntro" src="assets/video/chica.mp4" playsinline preload="auto"
-    style="width:100%; height:100%; object-fit:contain; background:#000"></video>
-  <button class="btn verde" id="btnIntroSig"
-    style="position:fixed; bottom:24px; right:24px; z-index:10">Continuar ▶</button>
+<!-- ====== VIDEO BIENVENIDA ====== -->
+<section id="bienvenida" class="screen">
+  <video id="vidBienv" src="assets/video/bienvenida.mp4" playsinline preload="auto"></video>
+  <button class="btn verde chico" id="btnSaltar" style="position:fixed; bottom:22px; right:22px; z-index:10">Continuar ▶</button>
 </section>
 
-<!-- ====== SELECCIÓN ====== -->
-<section id="seleccion" class="screen">
-  <h2 class="tituloSec">¿A dónde vamos hoy?</h2>
-  <div class="panelSel">
-    <img class="yamiSel" id="yamiSel" src="assets/img/yami-base.png" alt="Yami">
-    <div class="tarjetas">
-      <div class="cardSel" data-sec="exp" data-ropa="cientifica" data-voz="experimentar" data-frase="¡Listo para experimentar!">
-        <span class="emo">🔬</span><span>Experimentos mágicos</span></div>
-      <div class="cardSel" data-sec="calma" data-ropa="pijama" data-voz="relajarnos" data-frase="Hora de relajarnos">
-        <span class="emo">🫧</span><span>Zona de calma</span></div>
-      <div class="cardSel" data-sec="casa" data-ropa="carpintera" data-voz="construir" data-frase="¡Hora de construir!">
-        <span class="emo">🏠</span><span>En casa con la familia</span></div>
-    </div>
+<!-- ====== ÁRBOL MÁGICO ====== -->
+<section id="arbol" class="screen">
+  <img class="fondoImg" id="imgArbol" src="assets/img/arbol.jpg" alt="" onerror="this.style.display='none'">
+  <button class="fruto" data-rama="olfato" style="left:22%; top:10%; background:radial-gradient(circle at 35% 30%,#b2e8a2,#4caf50)">👃<small>OLFATO</small></button>
+  <button class="fruto" data-rama="gusto"  style="left:45%; top:6%; background:radial-gradient(circle at 35% 30%,#ffb3d5,#e0559a)">👅<small>GUSTO</small></button>
+  <button class="fruto" data-rama="oido"   style="left:67%; top:10%; background:radial-gradient(circle at 35% 30%,#9adcff,#2f9fd6)">👂<small>OÍDO</small></button>
+  <button class="fruto" data-rama="vista"  style="left:8%; top:40%; background:radial-gradient(circle at 35% 30%,#ffe98a,#f0b429)">👁<small>VISTA</small></button>
+  <button class="fruto" data-rama="tacto"  style="left:83%; top:40%; background:radial-gradient(circle at 35% 30%,#ffcf9e,#f18f2f)">✋<small>TACTO</small></button>
+  <button class="hotspot" id="lunaBtn" style="left:2%; top:2%; width:15%; height:30%">
+    <span class="tag">🌙 Calma</span></button>
+  <span class="maripo" style="left:8%; top:64%; font-size:26px">🦋</span>
+  <span class="maripo" style="left:70%; top:74%; font-size:22px; animation-delay:1.3s">🦋</span>
+  <span class="maripo" style="left:30%; top:80%; font-size:20px; animation-delay:2s">🐝</span>
+  <button class="hotspot" id="casitaBtn" style="left:69%; top:56%; width:26%; height:38%">
+    <span class="tag">👨‍👩‍👧 Familia</span></button>
+  <img id="yamiArbol" src="assets/img/yami-base.png" alt="Yami">
+</section>
+
+<!-- ====== VISTA ====== -->
+<section id="vista" class="screen" style="padding:0">
+  <img class="fondoImg" src="assets/img/dia.jpg" alt="">
+  <div id="tinte"></div>
+  <div id="oscuro"></div>
+  <div id="siluetas"></div>
+  <div class="hint" id="hintVista" style="position:fixed; top:76px; z-index:8; left:50%; transform:translateX(-50%)">👆 Toca un color mágico</div>
+  <div class="lente" data-col="255,216,77"  style="left:calc(50% - 130px); background:rgba(255,216,77,.55)"></div>
+  <div class="lente" data-col="92,150,255"  style="left:calc(50% - 40px);  background:rgba(92,150,255,.55)"></div>
+  <div class="lente" data-col="255,95,120"  style="left:calc(50% + 50px);  background:rgba(255,95,120,.55)"></div>
+</section>
+
+<!-- ====== OÍDO ====== -->
+<section id="oido" class="screen" style="padding:0">
+  <img class="fondoImg" src="assets/img/bosque.jpg" alt="" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(180deg,#bfe8ff,#d7f5c9)'">
+  <div class="hint" style="position:fixed; top:76px; z-index:8; left:50%; transform:translateX(-50%)">👆 Toca y escucha</div>
+  <div id="spritesOido" style="position:absolute; inset:0; z-index:2"></div>
+</section>
+
+<!-- ====== OLFATO ====== -->
+<section id="olfato" class="screen" style="padding:0">
+  <img class="fondoImg" src="assets/img/jardin.jpg" alt="" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(180deg,#d7f5c9,#ffe9f4)'">
+  <div class="hint" style="position:fixed; top:76px; z-index:8; left:50%; transform:translateX(-50%)">👆 Toca un frasco y huélelo de verdad</div>
+  <div id="frascosWrap" style="position:absolute; inset:0; z-index:2"></div>
+</section>
+
+<!-- ====== TACTO ====== -->
+<section id="tacto" class="screen" style="background:linear-gradient(180deg,#ffe9c2,#ffd3e6)">
+  <h2 class="tituloSec">✋ Toco y descubro</h2>
+  <div class="gridTex">
+    <div class="tex" id="texAlgodon" style="background-image:url('assets/img/tex-algodon.jpg')"><span class="etq">suave</span></div>
+    <div class="tex" id="texLija" style="background-image:url('assets/img/tex-lija.jpg')"><span class="etq">áspera</span></div>
+    <div class="tex" id="texPiedra" style="background-image:url('assets/img/tex-piedra.jpg')"><span class="etq">dura</span></div>
+    <div class="tex" id="texMasa" style="background:#f3e0c8"><canvas id="masaCanvas" style="width:100%;height:100%"></canvas><span class="etq">moldeable</span></div>
   </div>
-  <button class="btn grande" id="btnSelEmpezar" style="margin-top:22px; opacity:.4; pointer-events:none">EMPEZAR ▶</button>
 </section>
 
-<!-- ====== EXPERIMENTOS (lista) ====== -->
-<section id="experimentos" class="screen">
-  <h2 class="tituloSec">🔬 Experimentos mágicos</h2>
-  <div class="gridExp" id="gridExp"></div>
-</section>
-
-<!-- ====== MESA (preparación) ====== -->
-<section id="mesa" class="screen">
-  <div id="mesaWrap">
-    <div class="contador" id="contadorMesa">Toca los objetos ✨</div>
-    <div class="zonaFlote" id="zonaFlote"></div>
-    <div class="mesa2d">
-      <div class="tablero"></div>
-      <div class="pata izq"></div>
-      <div class="pata der"></div>
-      <div class="mesaSlots" id="mesaSlots"></div>
-    </div>
-    <button class="btn morado" id="btnHacerExp" style="margin-top:6px; display:none">¡Hacer el experimento! ✨</button>
+<!-- ====== GUSTO ====== -->
+<section id="gusto" class="screen" style="background:linear-gradient(180deg,#ffd9ec,#fff3d6)">
+  <h2 class="tituloSec" style="color:#d63d86; text-shadow:0 2px 0 #fff">👅 Pruebo y descubro</h2>
+  <div id="ruletaWrap">
+    <span id="flechaR">🔻</span>
+    <svg id="ruletaSvg" viewBox="-105 -105 210 210"></svg>
   </div>
+  <div class="hint" id="hintGusto" style="margin-top:10px">👆 Toca la ruleta</div>
+  <div class="vasosRow" id="vasosRow"></div>
+  <div id="comidaPop"><svg id="comidaSvg" viewBox="0 0 200 220"></svg></div>
 </section>
 
-<!-- ====== ESCENA DE EXPERIMENTO ====== -->
-<section id="expReaccion" class="screen">
-  <h2 class="tituloSec" id="expReTitulo">Experimento</h2>
-  <div class="escenaExp">
-    <div class="hintExp" id="hintExp">👆 Toca</div>
-    <div class="labStage" id="labStage">
-
-      <!-- 💧 AGUA QUE NO MOJA (talco) -->
-      <div id="escAgua" class="esc">
-        <svg viewBox="0 0 360 340" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="180" cy="322" rx="150" ry="16" fill="#caa37a"/>
-          <path d="M95 205 L105 300 Q107 312 180 312 Q253 312 255 300 L265 205 Z"
-                fill="rgba(200,230,255,.45)" stroke="#7fb6e0" stroke-width="4"/>
-          <clipPath id="clipAgua"><path d="M100 238 L260 238 L255 300 Q253 310 180 310 Q107 310 105 300 Z"/></clipPath>
-          <g clip-path="url(#clipAgua)">
-            <rect x="100" y="238" width="160" height="84" fill="#5cc8ff" opacity=".8"/>
-            <ellipse id="capaTalco" cx="180" cy="243" rx="76" ry="7" fill="#fff" opacity="0" class="op4"/>
-          </g>
-          <ellipse cx="180" cy="238" rx="80" ry="12" fill="#9ad9ff"/>
-          <g id="talcoBote" class="tr6" style="transform-box:fill-box; transform-origin:50% 85%">
-            <rect x="56" y="66" width="36" height="54" rx="9" fill="#fff" stroke="#d3a6e8" stroke-width="3"/>
-            <rect x="65" y="52" width="18" height="16" rx="4" fill="#d3a6e8"/>
-            <text x="74" y="99" font-size="10" text-anchor="middle" fill="#a86cc9" font-weight="bold">TALCO</text>
-          </g>
-          <g id="polvoCae" opacity="0" class="op4">
-            <circle cx="126" cy="176" r="3" fill="#fff"/><circle cx="140" cy="192" r="2.6" fill="#fff"/>
-            <circle cx="118" cy="200" r="2.4" fill="#fff"/><circle cx="150" cy="212" r="3" fill="#fff"/>
-            <circle cx="132" cy="222" r="2.6" fill="#fff"/><circle cx="160" cy="226" r="2.4" fill="#fff"/>
-          </g>
-          <g id="manoA" class="tr9" style="transform-box:fill-box; transform-origin:50% 0">
-            <rect x="196" y="18" width="34" height="70" rx="14" fill="#f4c08a" stroke="#d89a5e" stroke-width="3"/>
-            <path d="M190 86 Q190 118 213 120 Q236 118 236 86 Q236 78 230 78 L196 78 Q190 78 190 86 Z"
-                  fill="#f4c08a" stroke="#d89a5e" stroke-width="3"/>
-            <rect x="194" y="110" width="9" height="20" rx="4" fill="#f4c08a" stroke="#d89a5e" stroke-width="2"/>
-            <rect x="208" y="114" width="9" height="22" rx="4" fill="#f4c08a" stroke="#d89a5e" stroke-width="2"/>
-            <rect x="222" y="110" width="9" height="20" rx="4" fill="#f4c08a" stroke="#d89a5e" stroke-width="2"/>
-          </g>
-          <g id="brillosA" style="display:none">
-            <text x="176" y="66" font-size="24">✨</text>
-            <text x="236" y="52" font-size="18">✨</text>
-            <text x="206" y="32" font-size="16">⭐</text>
-          </g>
-        </svg>
-      </div>
-
-      <!-- 🌈 MONSTRUOS DE EMOCIONES -->
-      <div id="escMon" class="esc">
-        <svg viewBox="0 0 360 340" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="180" cy="318" rx="150" ry="20" fill="#caa37a"/>
-          <rect x="40" y="312" width="280" height="14" rx="6" fill="#a87f51"/>
-          <path d="M120 170 L130 300 Q132 312 180 312 Q228 312 230 300 L240 170 Z"
-                fill="rgba(220,235,255,.45)" stroke="#9fc6e8" stroke-width="4"/>
-          <clipPath id="cupClipM"><path d="M120 170 L130 300 Q132 312 180 312 Q228 312 230 300 L240 170 Z"/></clipPath>
-          <rect id="liqMon" x="118" y="312" width="124" height="0" fill="#ffd84d" clip-path="url(#cupClipM)" opacity=".85"/>
-          <ellipse cx="180" cy="170" rx="60" ry="11" fill="rgba(220,235,255,.5)" stroke="#9fc6e8" stroke-width="4"/>
-          <g id="caraMon" opacity="0" class="op4" style="transform-box:fill-box; transform-origin:50% 100%"></g>
-        </svg>
-        <div id="foamM"></div>
-      </div>
-
-      <!-- 🌱 FLOR MÁGICA -->
-      <div id="escFlor" class="esc">
-        <svg viewBox="0 0 360 340" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="180" cy="322" rx="150" ry="16" fill="#caa37a"/>
-          <g id="plantaG">
-            <g id="tallo" style="transform-box:fill-box; transform-origin:50% 100%; transform:scaleY(0); transition:transform 1s ease">
-              <path d="M180 258 L180 150" stroke="#4caf50" stroke-width="8" stroke-linecap="round"/>
-              <path d="M180 220 Q150 210 146 188" stroke="#4caf50" stroke-width="6" fill="none" stroke-linecap="round"/>
-              <ellipse cx="144" cy="184" rx="16" ry="9" fill="#76d275" transform="rotate(-38 144 184)"/>
-              <path d="M180 196 Q210 188 216 168" stroke="#4caf50" stroke-width="6" fill="none" stroke-linecap="round"/>
-              <ellipse cx="218" cy="164" rx="16" ry="9" fill="#76d275" transform="rotate(34 218 164)"/>
-            </g>
-            <g id="florG" style="transform-box:fill-box; transform-origin:50% 50%; transform:scale(0); transition:transform .9s cubic-bezier(.34,1.56,.6,1)">
-              <circle cx="180" cy="118" r="17" fill="#ffd84d"/>
-              <ellipse cx="180" cy="86" rx="14" ry="20" fill="#ff8fc7"/>
-              <ellipse cx="180" cy="150" rx="14" ry="20" fill="#ff8fc7"/>
-              <ellipse cx="148" cy="118" rx="20" ry="14" fill="#ff8fc7"/>
-              <ellipse cx="212" cy="118" rx="20" ry="14" fill="#ff8fc7"/>
-              <ellipse cx="156" cy="94" rx="15" ry="12" fill="#ff5fa8" transform="rotate(-45 156 94)"/>
-              <ellipse cx="204" cy="94" rx="15" ry="12" fill="#ff5fa8" transform="rotate(45 204 94)"/>
-              <ellipse cx="156" cy="142" rx="15" ry="12" fill="#ff5fa8" transform="rotate(45 156 142)"/>
-              <ellipse cx="204" cy="142" rx="15" ry="12" fill="#ff5fa8" transform="rotate(-45 204 142)"/>
-              <circle cx="180" cy="118" r="12" fill="#f7b32b"/>
-            </g>
-          </g>
-          <g id="macetaG">
-            <path d="M138 252 L150 316 Q152 324 180 324 Q208 324 210 316 L222 252 Z" fill="#e07b54" stroke="#b85c3a" stroke-width="3"/>
-            <rect x="130" y="244" width="100" height="16" rx="7" fill="#c96a45" stroke="#b85c3a" stroke-width="3"/>
-            <ellipse id="tierraM" cx="180" cy="252" rx="38" ry="7" fill="#8a5a3b"/>
-          </g>
-          <circle id="semillaC" cx="180" cy="60" r="9" fill="#8a5a3b" stroke="#6b4226" stroke-width="2" opacity="0"
-                  style="transition:transform .8s cubic-bezier(.5,0,.7,1), opacity .3s"/>
-          <g id="regaderaG" class="tr6" style="transform-box:fill-box; transform-origin:50% 60%; opacity:0">
-            <path d="M236 74 Q260 60 276 76" fill="none" stroke="#5cc8ff" stroke-width="7" stroke-linecap="round"/>
-            <rect x="242" y="74" width="56" height="42" rx="12" fill="#7dd3ff" stroke="#3aa7dd" stroke-width="3"/>
-            <path d="M242 84 L216 100 L222 108 L244 98 Z" fill="#7dd3ff" stroke="#3aa7dd" stroke-width="3"/>
-            <circle cx="219" cy="103" r="7" fill="#3aa7dd"/>
-          </g>
-          <g id="gotasR" opacity="0">
-            <circle cx="206" cy="128" r="4" fill="#5cc8ff" style="animation:caeGota .7s linear infinite"/>
-            <circle cx="192" cy="140" r="3.4" fill="#5cc8ff" style="animation:caeGota .7s .2s linear infinite"/>
-            <circle cx="216" cy="146" r="3.4" fill="#5cc8ff" style="animation:caeGota .7s .4s linear infinite"/>
-          </g>
-          <text id="mariposa1" x="110" y="120" font-size="26" opacity="0" style="transition:opacity .5s">🦋</text>
-          <text id="mariposa2" x="240" y="90" font-size="22" opacity="0" style="transition:opacity .5s">🐝</text>
-        </svg>
-      </div>
-
-      <!-- 🧼 MANOS LIMPIAS -->
-      <div id="escManos" class="esc">
-        <svg viewBox="0 0 360 340" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="180" cy="324" rx="155" ry="14" fill="#caa37a"/>
-          <ellipse cx="180" cy="230" rx="150" ry="72" fill="#fff" stroke="#d8cbe8" stroke-width="4"/>
-          <ellipse cx="180" cy="228" rx="128" ry="56" fill="#bfe6ff"/>
-          <clipPath id="platoClip"><ellipse cx="180" cy="228" rx="128" ry="56"/></clipPath>
-          <g id="pimientas" clip-path="url(#platoClip)"></g>
-          <g id="jabonG" opacity="0" class="op4" style="transform-box:fill-box; transform-origin:50% 50%">
-            <rect x="150" y="206" width="60" height="36" rx="14" fill="#ff8fc7" stroke="#d63d86" stroke-width="3"/>
-            <ellipse cx="180" cy="216" rx="18" ry="5" fill="#ffc4e2"/>
-            <text x="180" y="230" font-size="9" text-anchor="middle" fill="#a2246a" font-weight="bold">JABÓN</text>
-          </g>
-          <g id="manosOk" opacity="0" class="op4">
-            <text x="96" y="130" font-size="42">🫧</text>
-            <text x="150" y="102" font-size="46">🙌</text>
-            <text x="226" y="126" font-size="34">✨</text>
-          </g>
-        </svg>
-      </div>
-
-      <!-- ☁️ NUBE QUE LLUEVE -->
-      <div id="escNube" class="esc">
-        <svg viewBox="0 0 360 340" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="180" cy="326" rx="150" ry="14" fill="#caa37a"/>
-          <path d="M126 150 L134 306 Q135 318 180 318 Q225 318 226 306 L234 150 Z"
-                fill="rgba(220,235,255,.45)" stroke="#9fc6e8" stroke-width="4"/>
-          <clipPath id="vasoNubeClip"><path d="M128 176 L232 176 L226 306 Q225 316 180 316 Q135 316 134 306 Z"/></clipPath>
-          <g clip-path="url(#vasoNubeClip)">
-            <rect id="aguaNube" x="128" y="200" width="104" height="120" fill="#5cc8ff" opacity=".25"
-                  style="transition:opacity 1.2s"/>
-            <g id="lluviaG" opacity="0">
-              <line x1="160" y1="196" x2="158" y2="216" stroke="#3aa7dd" stroke-width="4" stroke-linecap="round" style="animation:lluevePlin 1s linear infinite"/>
-              <line x1="184" y1="192" x2="182" y2="212" stroke="#3aa7dd" stroke-width="4" stroke-linecap="round" style="animation:lluevePlin 1s .3s linear infinite"/>
-              <line x1="206" y1="198" x2="204" y2="218" stroke="#3aa7dd" stroke-width="4" stroke-linecap="round" style="animation:lluevePlin 1s .6s linear infinite"/>
-            </g>
-          </g>
-          <g id="nubeAlg">
-            <ellipse cx="180" cy="168" rx="62" ry="26" fill="#fff"/>
-            <circle cx="146" cy="160" r="24" fill="#fff"/>
-            <circle cx="182" cy="148" r="28" fill="#fff"/>
-            <circle cx="216" cy="162" r="22" fill="#fff"/>
-            <ellipse id="nubeTinte" cx="180" cy="160" rx="60" ry="26" fill="#5cc8ff" opacity="0" style="transition:opacity .5s"/>
-          </g>
-          <g id="goteroG" class="tr6" style="transform-box:fill-box; transform-origin:50% 20%">
-            <circle cx="272" cy="62" r="16" fill="#9b7bff" stroke="#7c5cff" stroke-width="3"/>
-            <path d="M264 74 L258 118 L270 118 Z" fill="#cdbcff" stroke="#7c5cff" stroke-width="3"/>
-          </g>
-          <g id="gotasN"></g>
-        </svg>
-      </div>
-
-      <!-- ☀️🌙 DÍA Y NOCHE (imágenes reales) -->
-      <div id="escDia" class="esc" style="border-radius:20px; overflow:hidden; box-shadow:0 12px 26px rgba(0,0,0,.3)">
-        <img id="fondoDia" class="fondoDN" src="assets/img/dia.jpg" alt="Día">
-        <img id="fondoNoche" class="fondoDN" src="assets/img/noche.jpg" style="opacity:0" alt="Noche">
-        <div id="fxNoche" class="fxCapa" style="opacity:0">
-          <span class="twk" style="top:7%;left:10%">✦</span>
-          <span class="twk" style="top:15%;left:34%;animation-delay:.5s">✧</span>
-          <span class="twk" style="top:5%;left:58%;animation-delay:1s">✦</span>
-          <span class="twk" style="top:20%;left:80%;animation-delay:.3s">✧</span>
-          <span class="twk" style="top:30%;left:16%;animation-delay:.8s">✦</span>
-          <span class="fugaz">⭐</span>
-          <span class="luci" style="left:16%;bottom:16%"></span>
-          <span class="luci" style="left:52%;bottom:10%;animation-delay:1.2s"></span>
-          <span class="luci" style="left:76%;bottom:22%;animation-delay:2.1s"></span>
-        </div>
-        <div id="fxDia" class="fxCapa">
-          <span class="maripo" style="left:14%;top:40%">🦋</span>
-          <span class="maripo" style="left:68%;top:32%;animation-delay:1.4s">🐝</span>
-        </div>
-        <img id="solImg" src="assets/img/sol.png" alt="Sol">
-        <img id="lunaImg" src="assets/img/luna.png" alt="Luna">
-      </div>
-
-      <!-- 🐟 PEZ QUE SE INFLA -->
-      <div id="escPez" class="esc">
-        <svg viewBox="0 0 360 340" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="180" cy="322" rx="150" ry="16" fill="#caa37a"/>
-          <path d="M150 190 Q142 200 142 220 L142 300 Q142 314 180 314 Q218 314 218 300 L218 220 Q218 200 210 190 Z"
-                fill="rgba(200,240,210,.5)" stroke="#6aa84f" stroke-width="4"/>
-          <clipPath id="botPezClip"><path d="M146 210 L214 210 L214 300 Q214 310 180 310 Q146 310 146 300 Z"/></clipPath>
-          <g clip-path="url(#botPezClip)">
-            <rect x="146" y="230" width="68" height="82" fill="#d9f2c9" opacity=".9"/>
-            <g id="fizzP" opacity="0">
-              <circle cx="162" cy="290" r="5" fill="#fff" style="animation:burbujita 1s linear infinite"/>
-              <circle cx="182" cy="296" r="4" fill="#fff" style="animation:burbujita 1s .3s linear infinite"/>
-              <circle cx="200" cy="288" r="4.6" fill="#fff" style="animation:burbujita 1s .6s linear infinite"/>
-              <circle cx="172" cy="300" r="3.4" fill="#fff" style="animation:burbujita 1s .8s linear infinite"/>
-            </g>
-          </g>
-          <rect x="158" y="178" width="44" height="16" rx="5" fill="#6aa84f"/>
-          <g id="pezG" style="transform-box:fill-box; transform-origin:50% 100%; transform:scale(.32);
-               transition:transform .9s cubic-bezier(.34,1.56,.6,1)">
-            <path id="colaP" d="M236 118 L272 92 L272 144 Z" fill="#ff8c42" stroke="#e06c1f" stroke-width="3"
-                  style="transform-box:fill-box; transform-origin:0 50%"/>
-            <ellipse cx="176" cy="118" rx="64" ry="46" fill="#ffa552" stroke="#e06c1f" stroke-width="4"/>
-            <path d="M150 84 Q176 62 198 86 L176 100 Z" fill="#ff8c42" stroke="#e06c1f" stroke-width="3"/>
-            <path d="M120 108 Q104 118 120 130" fill="none" stroke="#e06c1f" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="146" cy="106" r="11" fill="#fff"/><circle cx="148" cy="108" r="5.5" fill="#3a2a4d"/>
-            <path d="M128 134 Q140 144 152 136" stroke="#b3541e" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <path d="M196 88 Q202 118 196 148" stroke="#e06c1f" stroke-width="4" fill="none" opacity=".6"/>
-            <path d="M214 94 Q220 118 214 142" stroke="#e06c1f" stroke-width="4" fill="none" opacity=".6"/>
-          </g>
-        </svg>
-      </div>
-
-    </div><!-- /labStage -->
-    <div class="monsRow" id="monsRow" style="display:none"></div>
-    <div class="botonesExp">
-      <button class="btn verde chico" id="btnOtraVez" style="display:none">🔁 Otra vez</button>
-      <button class="btn amarillo chico" id="btnHazlo" style="display:none">💛 ¡Hazlo de verdad!</button>
-      <button class="btn chico morado" id="btnVolverExp">◀ Volver</button>
-    </div>
-  </div>
+<!-- ====== FAMILIA ====== -->
+<section id="familia" class="screen">
+  <h2 class="tituloSec" style="color:#c98a00; text-shadow:0 2px 0 #fff">🏡 Exploramos en familia</h2>
+  <p style="color:#8a6a3a; margin-bottom:10px; font-size:16px">Ideas para preparar ambientes de exploración en casa</p>
+  <div class="gridFam" id="gridFam"></div>
 </section>
 
 <!-- ====== CALMA ====== -->
-<section id="calma" class="screen">
+<section id="calma" class="screen" style="padding:0; background:#1b1740">
+  <img class="fondoImg" src="assets/img/fondo-calma.jpg" alt="" style="opacity:.85">
+  <div id="cieloEstrellas"></div>
   <canvas id="lienzoBurbujas"></canvas>
-  <canvas id="lienzoDibujo"></canvas>
-  <canvas id="lienzoSlime"></canvas>
-  <div id="lucesUI"><div class="focoGrid" id="focoGrid"></div></div>
-  <div class="calmaUI">
-    <button class="btn chico" id="btnModoBurbujas">🫧 Burbujas</button>
-    <button class="btn chico morado" id="btnModoDibujo">🎨 Dibujar</button>
-    <button class="btn chico verde" id="btnModoSlime">🟣 Slime</button>
-    <button class="btn chico amarillo" id="btnModoLuces">💡 Luces</button>
-    <button class="btn chico" id="btnLimpiar" style="display:none">🧽 Limpiar</button>
+  <div id="ositoWrap">
+    <svg id="ositoSvg" viewBox="0 0 200 210"></svg>
+    <div id="ositoTxt">respira con el osito 🌬</div>
+  </div>
+  <div class="asmrBar">
+    <button class="asmrBtn" data-asmr="lluvia" title="Lluvia">🌧</button>
+    <button class="asmrBtn" data-asmr="viento" title="Viento">💨</button>
+    <button class="asmrBtn" data-asmr="agua" title="Agua">💧</button>
+    <button class="asmrBtn" data-asmr="hojas" title="Hojas">🍃</button>
+    <button class="asmrBtn" id="btnMusCalma" title="Música">🎵</button>
   </div>
 </section>
 
-<!-- ====== CASA ====== -->
-<section id="casa" class="screen">
-  <h2 class="tituloSec">🏠 En casa con la familia</h2>
-  <div class="gridExp" id="gridCasa" style="max-width:620px"></div>
+<!-- ====== DESPEDIDA ====== -->
+<section id="despedida" class="screen">
+  <img class="fondoImg" src="assets/img/yami-despedida.jpg" alt="">
+  <div class="globo">🌸 Hoy descubriste el mundo usando tus sentidos.<br>
+    Cada experiencia te ayudó a observar, escuchar, oler, tocar y saborear nuevas posibilidades.<br>
+    <b>¡Gracias por explorar conmigo! Te esperaré para vivir una nueva aventura.</b> 💛</div>
+  <button class="btn morado" id="btnVolverArbol" style="margin-top:18px">🌳 Volver al árbol</button>
 </section>
 
-<img class="yamiMini" id="yamiMini" src="assets/img/yami-cientifica.png" style="display:none" alt="">
+<button class="volver" id="btnVolver" style="display:none">◀</button>
 
-<!-- ====== PANEL PARA PAPÁS ====== -->
-<div class="overlay" id="overlayPadres">
+<!-- ====== MENSAJE FAMILIA ====== -->
+<div class="overlay" id="overlayFam">
   <div class="modal">
-    <span class="badgePadres">👩‍👦 Para los papás</span>
-    <h2 id="padresTitulo">Experimento</h2>
-    <p id="padresTexto"></p>
-    <div class="mats"><b>🧰 En el juego:</b><ul id="padresMats"></ul></div>
-    <button class="btn verde" id="btnPadresEmpezar">Empezar el juego ▶</button>
+    <span class="badge fam">💙 Mensaje para la familia</span>
+    <h2>Acompañando el descubrimiento</h2>
+    <p>Este recurso invita a los niños a explorar libremente utilizando sus sentidos.
+       El papel del adulto es preparar un ambiente seguro, observar con atención, acompañar
+       con afecto y respetar el ritmo e interés del niño.</p>
+    <p>No es necesario dirigir cada acción ni buscar respuestas correctas; cada experiencia
+       será valiosa porque nace de la curiosidad y la exploración del niño.</p>
+    <button class="btn verde" id="btnFamOk">Entendido, comenzamos ▶</button>
   </div>
 </div>
 
-<!-- ====== HAZLO DE VERDAD ====== -->
-<div class="overlay" id="overlayReal">
+<!-- ====== MODAL AMBIENTE (por sentido) ====== -->
+<div class="overlay" id="overlayAmb">
   <div class="modal">
-    <span class="badgeCasa">👨‍👩‍👧 ¡Hazlo de verdad en casa!</span>
-    <h2 id="realTitulo">Experimento</h2>
-    <p>Lo digital fue la práctica. Ahora viene lo mejor: hacerlo con materiales reales,
-       porque tu pequeño aprende tocando y explorando.</p>
-    <div class="mats"><b>🧺 Materiales reales:</b><ul id="realMats"></ul></div>
-    <div id="realVideo" style="margin:0 0 14px"></div>
-    <div class="consejo" id="realConsejo"></div>
-    <button class="btn morado" id="btnRealListo">¡Listo! ✔</button>
+    <span class="badge fam">👩‍👦 Prepara el ambiente</span>
+    <h2 id="ambTitulo"></h2>
+    <p id="ambTexto"></p>
+    <div class="mats"><b>🧺 Materiales sugeridos:</b><ul id="ambMats"></ul></div>
+    <button class="btn verde" id="btnAmbOk">¡A explorar! ▶</button>
+  </div>
+</div>
+
+<!-- ====== MODAL FAMILIA (propuesta) ====== -->
+<div class="overlay" id="overlayProp">
+  <div class="modal">
+    <span class="badge fam">🏡 Ambiente de exploración</span>
+    <h2 id="propTitulo"></h2>
+    <p id="propTexto"></p>
+    <div class="mats"><b>🧺 Materiales:</b><ul id="propMats"></ul></div>
+    <div id="propVideo"></div>
+    <div class="consejo" id="propConsejo"></div>
+    <button class="btn morado" id="btnPropOk">Listo ✔</button>
   </div>
 </div>
 
 <div id="confeti"></div>
 <audio id="musica" src="assets/audio/musica.mp3" loop></audio>
+<audio id="musCalma" src="assets/audio/musica-calma.mp3" loop></audio>
+<audio id="asmrAudio" loop></audio>
 
 <script>
-/* ================== MOTOR DE PANTALLAS ================== */
+/* ================== MOTOR ================== */
 const $=s=>document.querySelector(s);
 const screens=document.querySelectorAll('.screen');
+const RAMAS=['vista','oido','olfato','tacto','gusto'];
 function ir(id){
   screens.forEach(s=>s.classList.remove('activa'));
   $('#'+id).classList.add('activa');
-  $('#topbar').style.display=(id==='inicio')?'none':'flex';
-  $('#bgEspacio').style.display=(id==='inicio')?'block':'none';
-  $('#veloEspacio').style.display=(id==='inicio')?'block':'none';
-  if(id!=='intro'){ const v=$('#vidIntro'); if(v) v.pause(); }
-  if(id!=='calma'){ pararCalma(); }
-  $('#yamiMini').style.display=['mesa','expReaccion'].includes(id)?'block':'none';
+  $('#topbar').style.display=(id==='inicio'||id==='bienvenida')?'none':'flex';
+  $('#btnVolver').style.display=(RAMAS.includes(id)||['familia','calma'].includes(id))?'block':'none';
+  if(id!=='bienvenida'){ const v=$('#vidBienv'); if(v) v.pause(); }
+  if(id!=='calma') pararCalma();
+  if(id==='vista') iniVista();
+  if(id==='oido') iniOido();
+  if(id==='olfato') iniOlfato();
+  if(id==='tacto') iniTacto();
+  if(id==='gusto') iniGusto();
+  if(id==='calma') iniCalma();
 }
-
-/* ================== DECORACIÓN LAB ================== */
-const DECO_LAB=`<svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
- <g opacity=".5">
-  <rect x="40" y="90" width="240" height="12" rx="6" fill="#b9a3e8"/>
-  <rect x="70" y="46" width="26" height="44" rx="6" fill="#8fe38d"/>
-  <rect x="110" y="34" width="22" height="56" rx="8" fill="#ff8fc7"/>
-  <path d="M160 90 L160 52 L184 52 L184 90 Q184 96 172 96 Q160 96 160 90" fill="#7dd3ff"/>
-  <rect x="205" y="42" width="30" height="48" rx="10" fill="#ffd84d"/>
-  <rect x="720" y="120" width="240" height="12" rx="6" fill="#b9a3e8"/>
-  <circle cx="770" cy="96" r="22" fill="#9b7bff"/>
-  <rect x="812" y="70" width="24" height="50" rx="7" fill="#76d275"/>
-  <path d="M862 120 L868 74 L894 74 L900 120 Z" fill="#ff8fc7"/>
-  <rect x="915" y="82" width="26" height="38" rx="9" fill="#7dd3ff"/>
- </g>
- <g opacity=".35">
-  <circle cx="500" cy="80" r="7" fill="#9b7bff"/><circle cx="540" cy="52" r="5" fill="#ff8fc7"/>
-  <circle cx="460" cy="46" r="4" fill="#5cc8ff"/>
-  <text x="320" y="140" font-size="30">🧪</text><text x="640" y="80" font-size="26">⚗️</text>
-  <text x="60" y="220" font-size="26">🔭</text><text x="910" y="240" font-size="26">🧫</text>
- </g></svg>`;
-['experimentos','mesa','expReaccion'].forEach(id=>{
-  const d=document.createElement('div'); d.className='labDeco'; d.innerHTML=DECO_LAB;
-  document.getElementById(id).prepend(d);
-});
-
-/* ================== VOZ + MÚSICA (con atenuación) ================== */
-const musica=$('#musica'); let musOn=false; const VOL=.08;
-function musToggle(){ musOn=!musOn; if(musOn){musica.volume=VOL; musica.play().catch(()=>{});} else musica.pause();
-  $('#btnMusica').textContent=musOn?'🔊':'🔇'; }
-$('#btnMusica').onclick=musToggle;
-$('#btnHome').onclick=()=>ir('seleccion');
+$('#btnVolver').onclick=()=>{ pop(); ir('arbol'); };
+$('#btnArbol').onclick=()=>ir('arbol');
+$('#btnVolverArbol').onclick=()=>ir('arbol');
 $('#btnFull').onclick=()=>{
   if(document.fullscreenElement) document.exitFullscreen();
   else document.documentElement.requestFullscreen().catch(()=>{});
 };
+
+/* ================== VOZ ================== */
 let vozYami=null;
 function cargarVoz(){
   const vs=speechSynthesis.getVoices().filter(v=>v.lang && v.lang.toLowerCase().startsWith('es'));
@@ -650,756 +423,32 @@ function beep(freq=600,dur=.12,tipo='sine',vol=.25){
 function pop(){ beep(380+Math.random()*500,.18,'sine',.3); }
 const NOTAS=[261.6,293.7,329.6,392,440,523.3];
 function nota(i){ beep(NOTAS[i%NOTAS.length],.5,'sine',.22); }
+const SND={};
+['pajaro','lluvia','rio','viento','hojas','tambor'].forEach(k=>{ SND[k]=new Audio('assets/snd/'+k+'.mp3'); });
+let sndAlt=false;
+function playSnd(k){
+  const a=SND[k]; if(!a) return;
+  try{ a.currentTime=0; sndAlt=!sndAlt; a.playbackRate=sndAlt?1:1.18; a.volume=.85; a.play().catch(()=>{}); }catch(e){}
+}
 
-/* ================== CONFETI ================== */
-function confeti(){
-  const cont=$('#confeti'), EMO=['🎉','⭐','✨','💛','🌈','🫧'];
-  for(let i=0;i<34;i++){
+/* ================== MÚSICA ================== */
+const musica=$('#musica'); let musOn=false; const VOL=.08;
+function musToggle(){ musOn=!musOn; if(musOn){musica.volume=VOL; musica.play().catch(()=>{});} else musica.pause();
+  $('#btnMusica').textContent=musOn?'🔊':'🔇'; }
+$('#btnMusica').onclick=musToggle;
+
+/* ================== CONFETI + CHISPAS ================== */
+function confeti(EMO){
+  const cont=$('#confeti'); EMO=EMO||['🎉','⭐','✨','💛','🌈'];
+  for(let i=0;i<30;i++){
     const s=document.createElement('span'); s.className='confe';
     s.textContent=EMO[Math.floor(Math.random()*EMO.length)];
     s.style.left=Math.random()*100+'%';
     s.style.animationDuration=(1.8+Math.random()*1.6)+'s';
     s.style.animationDelay=(Math.random()*.5)+'s';
-    cont.appendChild(s);
-    setTimeout(()=>s.remove(),4200);
+    cont.appendChild(s); setTimeout(()=>s.remove(),4200);
   }
 }
-
-/* ================== VIDEO FONDO + INTRO ================== */
-$('#bgEspacio').src='assets/video/espacio.mp4';
-$('#btnEmpezar').onclick=()=>{
-  ir('intro');
-  const v=$('#vidIntro'); v.currentTime=0; v.muted=false; v.volume=1;
-  v.play().catch(()=>{});
-  v.onended=finIntro;
-};
-function finIntro(){
-  const v=$('#vidIntro'); v.pause();
-  if(!musOn) musToggle();
-  ir('seleccion'); decir('¿A dónde vamos hoy?','adondevamos');
-}
-$('#btnIntroSig').onclick=finIntro;
-
-/* ================== SELECCIÓN ================== */
-let seccionSel=null;
-document.querySelectorAll('.cardSel').forEach(c=>{
-  c.onclick=()=>{
-    document.querySelectorAll('.cardSel').forEach(x=>x.classList.remove('sel'));
-    c.classList.add('sel');
-    seccionSel=c.dataset.sec;
-    $('#yamiSel').src='assets/img/yami-'+c.dataset.ropa+'.png';
-    $('#yamiSel').style.transform='scale(1.06)';
-    setTimeout(()=>$('#yamiSel').style.transform='',300);
-    pop(); decir(c.dataset.frase, c.dataset.voz);
-    const b=$('#btnSelEmpezar'); b.style.opacity='1'; b.style.pointerEvents='auto';
-  };
-});
-$('#btnSelEmpezar').onclick=()=>{
-  if(seccionSel==='exp') ir('experimentos');
-  else if(seccionSel==='calma'){ ir('calma'); iniciarCalma(); decir('Toca las burbujas.','burbujas'); }
-  else if(seccionSel==='casa') ir('casa');
-};
-
-/* ================== ICONOS 2D ================== */
-const ICONS={
-  recipiente:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="40" rx="26" ry="7" fill="#eaf6ff" stroke="#7fb6e0" stroke-width="3"/><path d="M24 40 L31 80 Q33 88 50 88 Q67 88 69 80 L76 40" fill="#dff0ff" stroke="#7fb6e0" stroke-width="3"/></svg>`,
-  bicarbonato:`<svg viewBox="0 0 100 100"><rect x="30" y="26" width="40" height="60" rx="4" fill="#fff" stroke="#e0a92e" stroke-width="3"/><rect x="30" y="46" width="40" height="24" fill="#ffd84d"/><circle cx="50" cy="58" r="9" fill="#fff" stroke="#e0a92e" stroke-width="2"/><text x="50" y="39" font-family="Arial" font-weight="bold" font-size="8" fill="#c98a00" text-anchor="middle">BICARB.</text></svg>`,
-  vinagre:`<svg viewBox="0 0 100 100"><rect x="42" y="16" width="16" height="12" rx="2" fill="#4caf50"/><path d="M40 28 Q36 34 36 46 L36 82 Q36 88 42 88 L58 88 Q64 88 64 82 L64 46 Q64 34 60 28 Z" fill="#c7e8aa" stroke="#6aa84f" stroke-width="3"/><rect x="39" y="50" width="26" height="22" rx="2" fill="#fff" opacity=".9"/><text x="50" y="64" font-family="Arial" font-weight="bold" font-size="7" fill="#3e6b2e" text-anchor="middle">VINAGRE</text></svg>`,
-  colorante:`<svg viewBox="0 0 100 100"><g><rect x="18" y="44" width="15" height="34" rx="4" fill="#ff5fa8" stroke="#d63d86" stroke-width="2"/><rect x="22" y="36" width="7" height="10" fill="#d63d86"/></g><g><rect x="43" y="38" width="15" height="40" rx="4" fill="#5cc8ff" stroke="#2f9fd6" stroke-width="2"/><rect x="47" y="30" width="7" height="10" fill="#2f9fd6"/></g><g><rect x="68" y="46" width="15" height="32" rx="4" fill="#ffd84d" stroke="#e0a92e" stroke-width="2"/><rect x="72" y="38" width="7" height="10" fill="#e0a92e"/></g></svg>`,
-  agua:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="30" rx="18" ry="5" fill="#eaf6ff" stroke="#7fb6e0" stroke-width="3"/><path d="M32 30 L30 82 Q30 88 36 88 L64 88 Q70 88 70 82 L68 30 Z" fill="#dff0ff" stroke="#7fb6e0" stroke-width="3"/><path d="M34 58 L66 58 L65 82 Q65 86 60 86 L40 86 Q35 86 35 82 Z" fill="#5cc8ff" opacity=".8"/><path d="M68 40 Q82 43 82 54" fill="none" stroke="#7fb6e0" stroke-width="3"/></svg>`,
-  talco:`<svg viewBox="0 0 100 100"><rect x="32" y="30" width="36" height="56" rx="9" fill="#fff" stroke="#d3a6e8" stroke-width="3"/><rect x="41" y="18" width="18" height="14" rx="4" fill="#d3a6e8"/><circle cx="46" cy="15" r="1.6" fill="#a86cc9"/><circle cx="52" cy="14" r="1.6" fill="#a86cc9"/><text x="50" y="62" font-family="Arial" font-weight="bold" font-size="9" fill="#a86cc9" text-anchor="middle">TALCO</text></svg>`,
-  maceta:`<svg viewBox="0 0 100 100"><path d="M28 42 L36 82 Q37 88 50 88 Q63 88 64 82 L72 42 Z" fill="#e07b54" stroke="#b85c3a" stroke-width="3"/><rect x="24" y="34" width="52" height="12" rx="5" fill="#c96a45" stroke="#b85c3a" stroke-width="3"/><ellipse cx="50" cy="42" rx="18" ry="4" fill="#8a5a3b"/></svg>`,
-  semilla:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="58" rx="18" ry="24" fill="#a5713f" stroke="#6b4226" stroke-width="3"/><path d="M50 34 Q58 24 66 26" fill="none" stroke="#4caf50" stroke-width="4" stroke-linecap="round"/><ellipse cx="68" cy="24" rx="9" ry="5" fill="#76d275" transform="rotate(20 68 24)"/></svg>`,
-  regadera:`<svg viewBox="0 0 100 100"><path d="M38 34 Q56 20 72 36" fill="none" stroke="#5cc8ff" stroke-width="6" stroke-linecap="round"/><rect x="34" y="38" width="42" height="34" rx="10" fill="#7dd3ff" stroke="#3aa7dd" stroke-width="3"/><path d="M34 46 L16 58 L21 66 L36 56 Z" fill="#7dd3ff" stroke="#3aa7dd" stroke-width="3"/><circle cx="18" cy="61" r="6" fill="#3aa7dd"/></svg>`,
-  plato:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="56" rx="40" ry="19" fill="#fff" stroke="#d8cbe8" stroke-width="3"/><ellipse cx="50" cy="54" rx="30" ry="12" fill="#bfe6ff"/></svg>`,
-  pimienta:`<svg viewBox="0 0 100 100"><rect x="36" y="34" width="28" height="48" rx="9" fill="#5a4a6b" stroke="#3a2a4d" stroke-width="3"/><rect x="40" y="22" width="20" height="14" rx="5" fill="#8a7ba0"/><circle cx="45" cy="19" r="1.7" fill="#3a2a4d"/><circle cx="51" cy="18" r="1.7" fill="#3a2a4d"/><circle cx="57" cy="19" r="1.7" fill="#3a2a4d"/><text x="50" y="63" font-family="Arial" font-weight="bold" font-size="8" fill="#fff" text-anchor="middle">PIMIENTA</text></svg>`,
-  jabon:`<svg viewBox="0 0 100 100"><rect x="24" y="38" width="52" height="32" rx="13" fill="#ff8fc7" stroke="#d63d86" stroke-width="3"/><ellipse cx="50" cy="46" rx="15" ry="4" fill="#ffc4e2"/><circle cx="30" cy="30" r="5" fill="#fff" opacity=".85"/><circle cx="42" cy="24" r="4" fill="#fff" opacity=".85"/><circle cx="66" cy="28" r="5" fill="#fff" opacity=".85"/></svg>`,
-  vaso:`<svg viewBox="0 0 100 100"><path d="M32 26 L36 82 Q37 88 50 88 Q63 88 64 82 L68 26 Z" fill="rgba(220,235,255,.6)" stroke="#9fc6e8" stroke-width="3"/><ellipse cx="50" cy="26" rx="18" ry="5" fill="#eaf6ff" stroke="#9fc6e8" stroke-width="3"/></svg>`,
-  algodon:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="58" rx="30" ry="16" fill="#fff" stroke="#e3def0" stroke-width="2"/><circle cx="34" cy="52" r="13" fill="#fff" stroke="#e3def0" stroke-width="2"/><circle cx="52" cy="44" r="15" fill="#fff"/><circle cx="68" cy="54" r="12" fill="#fff" stroke="#e3def0" stroke-width="2"/></svg>`,
-  gotero:`<svg viewBox="0 0 100 100"><circle cx="50" cy="30" r="14" fill="#9b7bff" stroke="#7c5cff" stroke-width="3"/><path d="M43 42 L46 78 L54 78 L57 42 Z" fill="#cdbcff" stroke="#7c5cff" stroke-width="3"/><circle cx="50" cy="86" r="5" fill="#5cc8ff"/></svg>`,
-  botellagrande:`<svg viewBox="0 0 100 100"><rect x="42" y="12" width="16" height="12" rx="3" fill="#6aa84f"/><path d="M40 24 Q34 32 34 44 L34 82 Q34 88 40 88 L60 88 Q66 88 66 82 L66 44 Q66 32 60 24 Z" fill="rgba(200,240,210,.7)" stroke="#6aa84f" stroke-width="3"/><rect x="38" y="52" width="24" height="26" fill="#d9f2c9"/></svg>`,
-  pezglobo:`<svg viewBox="0 0 100 100"><path d="M68 50 L86 38 L86 62 Z" fill="#ff8c42" stroke="#e06c1f" stroke-width="2.6"/><ellipse cx="48" cy="50" rx="26" ry="19" fill="#ffa552" stroke="#e06c1f" stroke-width="3"/><circle cx="37" cy="45" r="5" fill="#fff"/><circle cx="38" cy="46" r="2.6" fill="#3a2a4d"/><path d="M30 57 Q37 62 44 57" stroke="#b3541e" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>`
-};
-
-/* ================== DATOS DE EXPERIMENTOS ================== */
-const EXPERIMENTOS=[
-  {id:'monstruos', emo:'🌈', nombre:'Monstruos de emociones', tipo:'mon', ytReal:'ZPMjs_uStBs',
-   padres:'Tu pequeño elegirá un monstruo de color y verá aparecer su espuma mágica. Cada monstruo es una emoción: nómbrala con él y pregúntale cuándo se siente así. Este juego apoya la expresión de emociones.',
-   mats:['Recipiente','Vinagre','Bicarbonato','Colorante'],
-   matsReales:['Vinagre','Bicarbonato de sodio','Colorante o témpera','Vasos transparentes','Caritas de emociones dibujadas'],
-   consejo:'💡 Peguen una carita de emoción a cada vaso. Al hacer espuma, digan juntos: "el monstruo rojo está enojado, ¿tú qué haces cuando te enojas?"',
-   objetos:[{icon:'recipiente',nombre:'recipiente'},{icon:'vinagre',nombre:'vinagre'},{icon:'bicarbonato',nombre:'bicarbonato'},{icon:'colorante',nombre:'colorante'}]},
-  {id:'agua', emo:'💧', nombre:'Agua que no moja', tipo:'agua', ytReal:'pXwm9qfGGrE',
-   padres:'Espolvorearán talco mágico sobre el agua y al meter la mano... ¡saldrá seca! Deja que tu pequeño toque y observe. Nombra lo que pasa: "mira, el talco protege tu manita".',
-   mats:['Recipiente','Agua','Talco'],
-   matsReales:['Recipiente transparente','Agua','Talco (o cocoa o canela)'],
-   consejo:'💡 Espolvorea bastante talco hasta cubrir la superficie. Guía el dedito del niño despacio y celebren juntos que salió seco.',
-   objetos:[{icon:'recipiente',nombre:'recipiente'},{icon:'agua',nombre:'agua'},{icon:'talco',nombre:'talco'}]},
-  {id:'flor', emo:'🌱', nombre:'Flor mágica', tipo:'flor', ytReal:'UxbmnBaW5kc',
-   padres:'Tu pequeño sembrará una semilla y la regará tocando la pantalla, viendo crecer su flor paso a paso. Enséñale que las plantas necesitan agua y cuidado.',
-   mats:['Maceta','Semilla','Regadera'],
-   matsReales:['Maceta o vaso','Tierra','Semilla (frijol crece rápido)','Agua'],
-   consejo:'💡 Siembren un frijol en algodón húmedo y revísenlo cada día. En pocos días el niño verá crecer su planta de verdad.',
-   objetos:[{icon:'maceta',nombre:'maceta'},{icon:'semilla',nombre:'semilla'},{icon:'regadera',nombre:'regadera'}]},
-  {id:'manos', emo:'🧼', nombre:'Manos limpias', tipo:'manos', ytReal:'l_Tqcjr52M8',
-   padres:'La pimienta representa a los gérmenes. Al tocar el plato con el jabón, ¡los gérmenes huyen! Úsalo para conversar sobre lavarse las manos.',
-   mats:['Plato','Agua','Pimienta','Jabón'],
-   matsReales:['Plato con agua','Pimienta molida','Jabón líquido o en barra'],
-   consejo:'💡 Después del experimento real, vayan juntos a lavarse las manos cantando una canción. Así el hábito se queda.',
-   objetos:[{icon:'plato',nombre:'plato'},{icon:'agua',nombre:'agua'},{icon:'pimienta',nombre:'pimienta'},{icon:'jabon',nombre:'jabón'}]},
-  {id:'nube', emo:'☁️', nombre:'Nube que llueve', tipo:'nube', ytReal:'Zq17FODQI3U',
-   padres:'Tu pequeño pondrá gotitas azules sobre la nube de algodón y verá caer la lluvia dentro del vaso. Nombra lo que pasa: "la nube se llenó de agua y ahora llueve".',
-   mats:['Vaso','Agua','Algodón','Gotero'],
-   matsReales:['Vaso transparente con agua','Algodón (la nube)','Colorante azul','Gotero o cuchara'],
-   consejo:'💡 En el experimento real usen espuma de afeitar como nube: es más vistoso y al niño le encanta.',
-   objetos:[{icon:'vaso',nombre:'vaso'},{icon:'agua',nombre:'agua'},{icon:'algodon',nombre:'algodón'},{icon:'gotero',nombre:'gotero'}]},
-  {id:'dianoche', emo:'☀️', nombre:'Día y noche', tipo:'dia', ytReal:'F8rpMaEbuEE',
-   padres:'Tocando el cielo, tu pequeño cambiará el día por la noche: sale la luna, brillan las estrellas y se enciende la casita. Conversen: ¿qué hacemos de día? ¿y de noche?',
-   mats:['Sol','Luna','Estrellas'], sinMesa:true,
-   matsReales:['Linterna','Una pelota (la Tierra)','Cuarto oscuro'],
-   consejo:'💡 En casa, apaguen la luz y alumbren la pelota con la linterna: un lado es de día y el otro de noche. ¡Magia real!',
-   objetos:[]},
-  {id:'pez', emo:'🐟', nombre:'El pez que se infla', tipo:'pez', ytReal:'BOapi1DoqpQ',
-   padres:'Al mezclar vinagre y bicarbonato, el globo con forma de pez se inflará solo, ¡como por arte de magia! Tu pequeño toca la botella y observa el cambio.',
-   mats:['Botella','Vinagre','Bicarbonato','Globo pez'],
-   matsReales:['Botella pequeña','Vinagre','Bicarbonato','Globo','Plumón para decorar'],
-   consejo:'💡 Decoren juntos el globo como pez antes de inflarlo. Pongan el bicarbonato dentro del globo y ¡a observar!',
-   objetos:[{icon:'botellagrande',nombre:'botella'},{icon:'vinagre',nombre:'vinagre'},{icon:'bicarbonato',nombre:'bicarbonato'},{icon:'pezglobo',nombre:'pez globo'}]},
-];
-const gridExp=$('#gridExp');
-EXPERIMENTOS.forEach(e=>{
-  const d=document.createElement('div');
-  d.className='expCard';
-  d.innerHTML=`<span class="emo">${e.emo}</span>${e.nombre}`;
-  d.onclick=()=>{ pop(); abrirPadres(e); };
-  gridExp.appendChild(d);
-});
-
-/* ================== PANEL PADRES ================== */
-let expActual=null;
-function abrirPadres(e){
-  expActual=e;
-  $('#padresTitulo').textContent=e.emo+' '+e.nombre;
-  $('#padresTexto').textContent=e.padres;
-  $('#padresMats').innerHTML=e.mats.map(m=>`<li>${m}</li>`).join('');
-  $('#btnPadresEmpezar').onclick=()=>{
-    $('#overlayPadres').classList.remove('activa');
-    if(e.sinMesa) irEscena(e); else iniciarMesa(e);
-  };
-  $('#overlayPadres').classList.add('activa');
-}
-
-/* ================== VIDEOS DE YOUTUBE ==================
-   En web (GitHub Pages) se incrustan y reproducen aquí mismo.
-   En archivo local YouTube bloquea el reproductor (error 153),
-   así que se muestra la miniatura y se abre en una pestaña. */
-function videoYT(id){
-  if(location.protocol==='file:'){
-    return `<a class="videoBox" style="width:100%;position:relative;text-decoration:none"
-      href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">
-      <img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="Video"
-        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.8">
-      <span style="position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;
-        margin:auto;color:#fff;font-weight:700;font-size:22px;text-shadow:0 2px 8px #000">▶ Ver video
-        <small style="font-weight:500;font-size:14px">se abre en YouTube</small></span></a>`;
-  }
-  return `<div class="videoBox" style="width:100%"><iframe loading="lazy"
-    src="https://www.youtube-nocookie.com/embed/${id}?rel=0"
-    allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
-}
-
-/* ================== HAZLO DE VERDAD ================== */
-function abrirReal(e){
-  $('#realTitulo').textContent=e.emo+' '+e.nombre;
-  $('#realMats').innerHTML=e.matsReales.map(m=>`<li>${m}</li>`).join('');
-  $('#realConsejo').textContent=e.consejo;
-  $('#realVideo').innerHTML=e.ytReal ? videoYT(e.ytReal) : '';
-  $('#overlayReal').classList.add('activa');
-  decir('¡Ahora hazlo de verdad con mamá o papá! Mira el video.','hazlo');
-}
-$('#btnRealListo').onclick=()=>{ $('#overlayReal').classList.remove('activa');
-  $('#realVideo').innerHTML=''; };
-$('#btnHazlo').onclick=()=>{ pop(); abrirReal(expActual); };
-
-/* ================== MESA (preparación) ================== */
-function iniciarMesa(e){
-  ir('mesa');
-  const zona=$('#zonaFlote'); zona.innerHTML='';
-  const slots=$('#mesaSlots'); slots.innerHTML='';
-  $('#btnHacerExp').style.display='none';
-  let juntados=0; const total=e.objetos.length;
-  $('#contadorMesa').textContent=`Toca los objetos ✨ (0/${total})`;
-  decir('Toca cada objeto para ponerlo en la mesa.','mesa');
-  e.objetos.forEach((o,i)=>{
-    const fig=ICONS[o.icon]||'';
-    const mv=document.createElement('div');
-    mv.className='obj2d'; mv.innerHTML=fig;
-    mv.style.left=(6+Math.random()*74)+'%';
-    mv.style.top=(6+Math.random()*60)+'%';
-    mv.style.animationDelay=(Math.random()*1.6)+'s';
-    const slot=document.createElement('div'); slot.className='slot2d';
-    slot.innerHTML=fig; slots.appendChild(slot);
-    mv.addEventListener('click',()=>{
-      if(mv.classList.contains('guardado'))return;
-      mv.classList.add('guardado'); slot.classList.add('puesto');
-      pop(); decir('¡Muy bien!','muybien'); juntados++;
-      $('#contadorMesa').textContent=`¡Muy bien! (${juntados}/${total})`;
-      if(juntados===total){
-        $('#contadorMesa').textContent='¡Mesa lista! 🎉';
-        $('#btnHacerExp').style.display='inline-block';
-        decir('¡Mesa lista! Ahora toca el botón para hacer el experimento.','mesalista');
-      }
-    });
-    zona.appendChild(mv);
-  });
-  $('#btnHacerExp').onclick=()=>irEscena(e);
-}
-/* ================== ESCENAS ================== */
-let tapHandler=null, escenaLista=false;
-function irEscena(e){
-  expActual=e; ir('expReaccion');
-  $('#expReTitulo').textContent=e.emo+' '+e.nombre;
-  document.querySelectorAll('.esc').forEach(x=>x.classList.remove('on'));
-  $('#btnOtraVez').style.display='none';
-  $('#btnHazlo').style.display='none';
-  $('#hintExp').style.display='block';
-  $('#monsRow').style.display='none';
-  tapHandler=null;
-  ({mon:iniMon, agua:iniAgua, flor:iniFlor, manos:iniManos, nube:iniNube, dia:iniDia, pez:iniPez})[e.tipo]();
-}
-$('#labStage').addEventListener('click',ev=>{ if(tapHandler) tapHandler(ev); });
-$('#btnVolverExp').onclick=()=>ir('experimentos');
-$('#btnOtraVez').onclick=()=>{ pop(); irEscena(expActual); };
-function lograste(fraseExtra,vozKey){
-  confeti(); beep(523,.18); setTimeout(()=>beep(659,.18),180); setTimeout(()=>beep(784,.3),360);
-  decir((fraseExtra||'¡Lo lograste, pequeño científico!')+' ¿Quieres hacerlo de verdad en casa?', vozKey||'lograste');
-  $('#hintExp').style.display='none';
-  $('#btnOtraVez').style.display='inline-block';
-  $('#btnHazlo').style.display='inline-block';
-}
-
-/* ----- 🌈 Monstruos de emociones ----- */
-const MONSTRUOS=[
-  {col:'#ff4d4d', borde:'#c62828', emocion:'enojado', voz:'mon-rojo', img:'assets/img/monstruo-rojo.png',
-   frase:'¡El monstruo rojo está enojado! Grrr. ¿Tú qué haces cuando te enojas?', anim:'tiembla',
-   cara:`<circle cx="0" cy="0" r="4.5" fill="#3a2a4d"/><circle cx="26" cy="0" r="4.5" fill="#3a2a4d"/>
-        <path d="M-9 -12 L7 -6 M35 -12 L19 -6" stroke="#3a2a4d" stroke-width="3.4" stroke-linecap="round"/>
-        <path d="M-2 16 Q13 8 28 16" stroke="#3a2a4d" stroke-width="3.4" fill="none" stroke-linecap="round"/>`},
-  {col:'#ffd84d', borde:'#e0a92e', emocion:'feliz', voz:'mon-amarillo', img:'assets/img/monstruo-amarillo.png',
-   frase:'¡El monstruo amarillo está feliz! Ja, ja. ¿Qué te hace feliz a ti?', anim:'saltito',
-   cara:`<circle cx="0" cy="0" r="4.5" fill="#3a2a4d"/><circle cx="26" cy="0" r="4.5" fill="#3a2a4d"/>
-        <path d="M-4 10 Q13 26 30 10" stroke="#3a2a4d" stroke-width="3.4" fill="none" stroke-linecap="round"/>`},
-  {col:'#76d275', borde:'#3e8e41', emocion:'con asco', voz:'mon-verde', img:'assets/img/monstruo-verde.png',
-   frase:'¡El monstruo verde siente asco! ¡Guácala! ¿Qué comida no te gusta?', anim:'tiembla',
-   cara:`<path d="M-6 -2 Q0 -8 6 -2 M20 -2 Q26 -8 32 -2" stroke="#3a2a4d" stroke-width="3.4" fill="none" stroke-linecap="round"/>
-        <path d="M0 14 Q8 10 13 14 Q18 18 26 14" stroke="#3a2a4d" stroke-width="3.4" fill="none" stroke-linecap="round"/>
-        <ellipse cx="13" cy="21" rx="6" ry="4" fill="#ff8fc7"/>`},
-  {col:'#b388ff', borde:'#7c4dff', emocion:'con miedo', voz:'mon-morado', img:'assets/img/monstruo-morado.png',
-   frase:'¡El monstruo morado tiene miedo! Oh, oh. Un abrazo lo ayuda. ¿A ti qué te da miedito?', anim:'tiembla',
-   cara:`<circle cx="0" cy="0" r="6" fill="#fff"/><circle cx="0" cy="0" r="3.4" fill="#3a2a4d"/>
-        <circle cx="26" cy="0" r="6" fill="#fff"/><circle cx="26" cy="0" r="3.4" fill="#3a2a4d"/>
-        <ellipse cx="13" cy="15" rx="5.4" ry="7" fill="#3a2a4d"/>`},
-  {col:'#5cc8ff', borde:'#1e88c9', emocion:'triste', voz:'mon-azul', img:'assets/img/monstruo-azul.png',
-   frase:'El monstruo azul está triste. Snif, snif. Un cariñito lo pone mejor. ¿Qué te pone triste?', anim:'',
-   cara:`<circle cx="0" cy="0" r="4.5" fill="#3a2a4d"/><circle cx="26" cy="0" r="4.5" fill="#3a2a4d"/>
-        <path d="M-2 18 Q13 8 28 18" stroke="#3a2a4d" stroke-width="3.4" fill="none" stroke-linecap="round"/>
-        <path d="M30 6 Q34 14 30 18 Q26 14 30 6" fill="#5cc8ff" stroke="#1e88c9" stroke-width="1.6"/>`},
-];
-function monsterSVG(m, s){
-  return `<svg viewBox="-30 -46 86 96"><g style="animation:${m.anim||'flota'} ${m.anim?'.6s':'3s'} ease-in-out infinite">
-    <path d="M-22 40 Q-30 -14 -8 -32 Q13 -48 34 -32 Q56 -14 48 40 L40 32 L34 42 L26 32 L18 42 L10 32 L2 42 L-6 32 L-14 42 Z"
-      fill="${m.col}" stroke="${m.borde}" stroke-width="3"/>
-    <g transform="translate(0,0)">${m.cara}</g></g></svg>`;
-}
-let monOcupado=false, monPrimera=true;
-MONSTRUOS.forEach(m=>{ const im=new Image(); im.onload=()=>m.imgOk=true; im.src=m.img; });
-function iniMon(){
-  $('#escMon').classList.add('on');
-  $('#hintExp').textContent='👆 ¿Cómo te sientes hoy? Toca un monstruo';
-  decir('¿Cómo te sientes hoy? Toca un monstruo de color.','mon-intro');
-  $('#liqMon').setAttribute('height','0'); $('#liqMon').setAttribute('y','312');
-  $('#caraMon').setAttribute('opacity','0'); $('#caraMon').innerHTML='';
-  $('#foamM').innerHTML='';
-  monOcupado=false; monPrimera=true;
-  const row=$('#monsRow'); row.style.display='flex'; row.innerHTML='';
-  MONSTRUOS.forEach((m,i)=>{
-    const b=document.createElement('button');
-    b.className='monBtn';
-    b.innerHTML=m.imgOk
-      ? `<img src="${m.img}" style="width:100%;height:100%;object-fit:contain;animation:${m.anim||'flota'} ${m.anim?'.7s':'3s'} ease-in-out infinite" alt="${m.emocion}">`
-      : monsterSVG(m);
-    b.onclick=ev=>{ ev.stopPropagation(); elegirMon(m,b); };
-    row.appendChild(b);
-  });
-}
-function elegirMon(m,btn){
-  if(monOcupado) return; monOcupado=true;
-  document.querySelectorAll('.monBtn').forEach(x=>x.classList.remove('sel'));
-  btn.classList.add('sel');
-  $('#hintExp').style.display='none';
-  $('#foamM').innerHTML='';
-  $('#caraMon').setAttribute('opacity','0');
-  decir(m.frase, m.voz); beep(300,.3,'sawtooth',.1);
-  const liq=$('#liqMon'); liq.setAttribute('fill',m.col);
-  let h=0; const iv=setInterval(()=>{ h+=5; if(h>=70){h=70; clearInterval(iv); erupcionMon(m);}
-    liq.setAttribute('height',h); liq.setAttribute('y',312-h); },45);
-}
-function erupcionMon(m){
-  const foam=$('#foamM'), dur=2200, t0=Date.now();
-  const iv=setInterval(()=>{
-    const t=Math.min((Date.now()-t0)/dur,1);
-    for(let k=0;k<4;k++){
-      const b=document.createElement('div'); b.className='fb';
-      const x=50+(Math.random()-.5)*(16+t*26)*2;
-      const y=46-Math.random()*16+t*(Math.random()*34);
-      const s=10+Math.random()*18;
-      b.style.cssText=`left:${x}%;top:${y}%;width:${s}px;height:${s}px;background:${m.col};animation-delay:${Math.random()*.15}s`;
-      foam.appendChild(b);
-    }
-    if(Math.random()<.5) beep(430+Math.random()*480,.07,'sine',.07);
-    if((Date.now()-t0)>=dur){
-      clearInterval(iv);
-      const cara=$('#caraMon');
-      cara.innerHTML=m.imgOk
-        ? `<image href="${m.img}" x="110" y="24" width="140" height="140"/>`
-        : `<g transform="translate(180,118) scale(1.35)"><g transform="translate(-13,0)">
-        <path d="M-22 34 Q-30 -14 -8 -32 Q13 -48 34 -32 Q56 -14 48 34 L40 27 L34 36 L26 27 L18 36 L10 27 L2 36 L-6 27 L-14 36 Z"
-          fill="${m.col}" stroke="${m.borde}" stroke-width="3"/>${m.cara}</g></g>`;
-      cara.setAttribute('opacity','1');
-      setTimeout(()=>{
-        monOcupado=false;
-        if(monPrimera){ monPrimera=false; lograste('¡Conociste al monstruo '+m.emocion+'!');
-          $('#hintExp').textContent='👆 Toca otro monstruo'; $('#hintExp').style.display='block'; }
-      },900);
-    }
-  },90);
-}
-
-/* ----- 💧 Agua que no moja (talco) ----- */
-let aguaPaso=0;
-function iniAgua(){
-  $('#escAgua').classList.add('on');
-  aguaPaso=0;
-  $('#talcoBote').style.transform='';
-  $('#capaTalco').setAttribute('opacity','0');
-  $('#polvoCae').setAttribute('opacity','0');
-  $('#manoA').style.transform='';
-  $('#brillosA').style.display='none';
-  $('#hintExp').textContent='👆 Toca el talco';
-  decir('Toca el talco para espolvorearlo sobre el agua.','agua-intro');
-  tapHandler=aguaTap;
-}
-function aguaTap(){
-  if(aguaPaso===0){
-    aguaPaso=1;
-    $('#talcoBote').style.transform='translate(36px,66px) rotate(135deg)';
-    beep(500,.15,'sine',.15);
-    setTimeout(()=>{ $('#polvoCae').setAttribute('opacity','1'); beep(700,.3,'sine',.08); },500);
-    setTimeout(()=>{ $('#capaTalco').setAttribute('opacity','.95'); },1100);
-    setTimeout(()=>{ $('#polvoCae').setAttribute('opacity','0'); $('#talcoBote').style.transform='';
-      $('#hintExp').textContent='👆 Toca para meter la mano';
-      decir('¡Listo! El agua tiene su capa mágica. Ahora toca para meter la mano.','agua-capa');
-      aguaPaso=2; },1700);
-  } else if(aguaPaso===2){
-    aguaPaso=3;
-    $('#manoA').style.transform='translateY(130px)'; beep(300,.25,'sine',.12);
-    $('#hintExp').textContent='👆 Toca para sacar la mano';
-    decir('Metemos la mano en el agua...','agua-mano');
-  } else if(aguaPaso===3){
-    aguaPaso=4;
-    $('#manoA').style.transform=''; beep(420,.2,'sine',.1);
-    setTimeout(()=>{ $('#brillosA').style.display='block'; beep(760,.3,'sine',.12);
-      lograste('¡Mira! La mano salió seca. ¡El talco mágico la protegió!','agua-fin'); },900);
-  }
-}
-
-/* ----- 🌱 Flor mágica ----- */
-let florPaso=0;
-function iniFlor(){
-  $('#escFlor').classList.add('on');
-  florPaso=0;
-  $('#semillaC').setAttribute('opacity','0'); $('#semillaC').style.transform='';
-  $('#tallo').style.transform='scaleY(0)';
-  $('#florG').style.transform='scale(0)';
-  $('#regaderaG').style.opacity='0'; $('#regaderaG').style.transform='';
-  $('#gotasR').setAttribute('opacity','0');
-  $('#mariposa1').setAttribute('opacity','0'); $('#mariposa2').setAttribute('opacity','0');
-  $('#hintExp').textContent='👆 Toca para sembrar la semilla';
-  decir('Toca la pantalla para sembrar la semilla.','flor-intro');
-  tapHandler=florTap;
-}
-function regar(cb){
-  $('#regaderaG').style.opacity='1';
-  $('#regaderaG').style.transform='translate(-46px,44px) rotate(-28deg)';
-  beep(500,.2,'sine',.1);
-  setTimeout(()=>{ $('#gotasR').setAttribute('opacity','1'); beep(650,.4,'sine',.08); },550);
-  setTimeout(()=>{ $('#gotasR').setAttribute('opacity','0');
-    $('#regaderaG').style.transform=''; setTimeout(()=>{$('#regaderaG').style.opacity='0'; cb();},450); },1500);
-}
-function florTap(){
-  if(florPaso===0){
-    florPaso=1;
-    const s=$('#semillaC'); s.setAttribute('opacity','1');
-    requestAnimationFrame(()=>{ s.style.transform='translateY(186px)'; });
-    beep(340,.2,'sine',.15);
-    setTimeout(()=>{ s.setAttribute('opacity','0'); pop();
-      $('#hintExp').textContent='👆 Toca para regar';
-      decir('¡Semillita plantada! Ahora toca para regarla.','flor-semilla');
-      florPaso=2; },900);
-  } else if(florPaso===2){
-    florPaso=3;
-    regar(()=>{ $('#tallo').style.transform='scaleY(.55)';
-      decir('¡Mira, está creciendo! Riégala otra vez.','flor-crece');
-      $('#hintExp').textContent='👆 Riega otra vez';
-      florPaso=4; });
-  } else if(florPaso===4){
-    florPaso=5;
-    regar(()=>{ $('#tallo').style.transform='scaleY(1)';
-      setTimeout(()=>{ $('#florG').style.transform='scale(1)'; beep(784,.4,'sine',.15);
-        setTimeout(()=>{ $('#mariposa1').setAttribute('opacity','1'); $('#mariposa2').setAttribute('opacity','1');
-          lograste('¡La flor mágica nació! Las plantas crecen con agua y cariño.','flor-fin'); },700);
-      },800); });
-  }
-}
-
-/* ----- 🧼 Manos limpias ----- */
-let manosListo=false;
-function iniManos(){
-  $('#escManos').classList.add('on');
-  const g=$('#pimientas'); g.innerHTML='';
-  for(let i=0;i<26;i++){
-    const a=Math.random()*Math.PI*2, r=Math.sqrt(Math.random())*.75;
-    const cx=180+Math.cos(a)*128*r, cy=228+Math.sin(a)*56*r;
-    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx',cx); c.setAttribute('cy',cy); c.setAttribute('r',2.6+Math.random()*1.8);
-    c.setAttribute('fill','#3a2a4d');
-    c.style.cssText='transition:transform 1.1s cubic-bezier(.3,.6,.4,1)';
-    g.appendChild(c);
-  }
-  $('#jabonG').setAttribute('opacity','0');
-  $('#manosOk').setAttribute('opacity','0');
-  manosListo=true;
-  $('#hintExp').textContent='👆 Toca el plato con el jabón';
-  decir('Los puntitos son gérmenes. ¡Toca el plato con el jabón para espantarlos!','manos-intro');
-  tapHandler=manosTap;
-}
-function manosTap(){
-  if(!manosListo) return; manosListo=false;
-  $('#jabonG').setAttribute('opacity','1');
-  beep(600,.15,'sine',.2);
-  document.querySelectorAll('#pimientas circle').forEach(c=>{
-    const cx=+c.getAttribute('cx'), cy=+c.getAttribute('cy');
-    const dx=cx-180, dy=cy-228, d=Math.hypot(dx/128,dy/56)||.15;
-    c.style.transform=`translate(${(dx/d)*(1-d)*1.02}px, ${(dy/d)*(1-d)*1.02}px)`;
-  });
-  setTimeout(()=>beep(800,.3,'sine',.1),400);
-  setTimeout(()=>{
-    $('#manosOk').setAttribute('opacity','1');
-    lograste('¡Los gérmenes huyeron del jabón! Por eso nos lavamos las manos.','manos-fin');
-  },1400);
-}
-
-/* ----- ☁️ Nube que llueve ----- */
-let nubeGotas=0, nubeOcupada=false;
-function iniNube(){
-  $('#escNube').classList.add('on');
-  nubeGotas=0; nubeOcupada=false;
-  $('#goteroG').style.transform='';
-  $('#nubeTinte').setAttribute('opacity','0');
-  $('#lluviaG').setAttribute('opacity','0');
-  $('#aguaNube').style.opacity='.25'; $('#aguaNube').setAttribute('fill','#5cc8ff');
-  $('#gotasN').innerHTML='';
-  $('#hintExp').textContent='👆 Toca el gotero';
-  decir('Toca el gotero para ponerle gotitas azules a la nube.','nube-intro');
-  tapHandler=nubeTap;
-}
-function nubeTap(){
-  if(nubeOcupada||nubeGotas>=3) return; nubeOcupada=true;
-  nubeGotas++;
-  $('#goteroG').style.transform='translate(-58px,44px) rotate(-32deg)';
-  beep(500,.12,'sine',.15);
-  setTimeout(()=>{
-    const g=$('#gotasN');
-    g.innerHTML=`<circle cx="216" cy="128" r="5" fill="#2f9fd6" style="animation:caeGota .6s linear 2"/>`;
-    beep(700,.15,'sine',.1);
-  },450);
-  setTimeout(()=>{
-    $('#gotasN').innerHTML='';
-    $('#goteroG').style.transform='';
-    $('#nubeTinte').setAttribute('opacity', (nubeGotas*.22)+'');
-    if(nubeGotas<3){
-      decir(nubeGotas===1?'¡Una gotita! Ponle más.':'¡Otra gotita! Una más.', nubeGotas===1?'nube-una':'nube-otra');
-      nubeOcupada=false;
-    } else {
-      decir('La nube está llenita... ¡mira!','nube-llena');
-      setTimeout(()=>{
-        $('#lluviaG').setAttribute('opacity','1');
-        $('#aguaNube').style.opacity='.85';
-        beep(400,.5,'sine',.08); setTimeout(()=>beep(360,.5,'sine',.08),400);
-        setTimeout(()=>lograste('¡Está lloviendo! La nube soltó su agüita, como la lluvia de verdad.','nube-fin'),1600);
-      },700);
-    }
-  },1300);
-}
-
-/* ----- ☀️🌙 Día y noche ----- */
-let esDia=true, cambios=0, diaOcupado=false;
-function iniDia(){
-  $('#escDia').classList.add('on');
-  esDia=true; cambios=0; diaOcupado=false;
-  ponDia(true,false);
-  $('#hintExp').textContent='👆 Toca el cielo';
-  decir('¡Es de día! El sol brilla. Toca el cielo para ver qué pasa.','dia-intro');
-  tapHandler=diaTap;
-}
-function ponDia(dia,anim){
-  $('#fondoDia').style.opacity=dia?'1':'0';
-  $('#fondoNoche').style.opacity=dia?'0':'1';
-  $('#fxNoche').style.opacity=dia?'0':'1';
-  $('#fxDia').style.opacity=dia?'1':'0';
-  $('#solImg').style.opacity=dia?'1':'0';
-  $('#solImg').style.transform=dia?'':'translateY(170px) scale(.6)';
-  $('#lunaImg').style.opacity=dia?'0':'1';
-  $('#lunaImg').style.transform=dia?'translateY(170px) scale(.6)':'translateY(0) scale(1)';
-}
-function diaTap(){
-  if(diaOcupado) return; diaOcupado=true;
-  esDia=!esDia; cambios++;
-  ponDia(esDia,true);
-  if(esDia){ beep(523,.15); setTimeout(()=>beep(659,.15),150); setTimeout(()=>beep(784,.25),300);
-    decir('¡Quiquiriquí! ¡Es de día! Sale el sol y jugamos.','dia-dia');
-  } else { beep(392,.3,'sine',.15); setTimeout(()=>beep(330,.4,'sine',.12),350);
-    decir('Uuuh, uuuh. ¡Es de noche! Sale la luna y las estrellas. A dormir.','dia-noche');
-  }
-  setTimeout(()=>{
-    diaOcupado=false;
-    if(cambios===2) lograste('¡Descubriste el día y la noche!','dia-fin');
-  },1600);
-}
-
-/* ----- 🐟 Pez que se infla ----- */
-let pezEtapa=0, pezOcupado=false;
-function iniPez(){
-  $('#escPez').classList.add('on');
-  pezEtapa=0; pezOcupado=false;
-  $('#fizzP').setAttribute('opacity','0');
-  $('#pezG').style.transform='scale(.32)';
-  $('#pezG').style.animation='';
-  $('#hintExp').textContent='👆 Toca la botella';
-  decir('El pez globo está dormido. ¡Toca la botella para despertarlo!','pez-intro');
-  tapHandler=pezTap;
-}
-function pezTap(){
-  if(pezOcupado||pezEtapa>=3) return; pezOcupado=true;
-  pezEtapa++;
-  $('#fizzP').setAttribute('opacity','1');
-  beep(260,.3,'sawtooth',.1); setTimeout(()=>beep(300,.3,'sine',.08),250);
-  const esc=[.32,.55,.8,1.05][pezEtapa];
-  setTimeout(()=>{ $('#pezG').style.transform=`scale(${esc})`; pop(); },500);
-  setTimeout(()=>{
-    $('#fizzP').setAttribute('opacity','0');
-    if(pezEtapa<3){
-      decir(pezEtapa===1?'¡Se está inflando! Toca otra vez.':'¡Ya casi! Una vez más.', pezEtapa===1?'pez-inflando':'pez-casi');
-      pezOcupado=false;
-    } else {
-      $('#pezG').style.animation='saltito 1s ease-in-out infinite';
-      lograste('¡El pez cobró vida! Las burbujitas mágicas lo inflaron.','pez-fin');
-    }
-  },1500);
-}
-/* ================== ZONA DE CALMA ================== */
-const cb=$('#lienzoBurbujas'), ctxB=cb.getContext('2d');
-const cd=$('#lienzoDibujo'), ctxD=cd.getContext('2d');
-const cs=$('#lienzoSlime'), ctxS=cs.getContext('2d');
-let burbujas=[], animCalma=null, animSlime=null, modo='burbujas';
-function resize(){ [cb,cd,cs].forEach(c=>{c.width=innerWidth;c.height=innerHeight;}); }
-addEventListener('resize',resize);
-function nuevaBurbuja(){
-  const r=24+Math.random()*46;
-  return {x:Math.random()*innerWidth, y:innerHeight+r, r,
-    vy:-(.6+Math.random()*1.1), vx:(Math.random()-.5)*.6,
-    hue:Math.random()*360, fase:Math.random()*6};
-}
-function pararCalma(){ cancelAnimationFrame(animCalma); cancelAnimationFrame(animSlime); }
-function setModo(m){
-  modo=m;
-  cd.style.display=(m==='dibujo')?'block':'none';
-  cs.style.display=(m==='slime')?'block':'none';
-  $('#lucesUI').style.display=(m==='luces')?'flex':'none';
-  cb.style.display=(m==='burbujas')?'block':'none';
-  $('#btnLimpiar').style.display=(m==='dibujo')?'inline-block':'none';
-  cancelAnimationFrame(animSlime);
-  if(m==='slime'){ resize(); iniSlime(); }
-}
-function iniciarCalma(){
-  resize(); burbujas=Array.from({length:14},nuevaBurbuja);
-  setModo('burbujas');
-  cancelAnimationFrame(animCalma); loopCalma();
-}
-function loopCalma(){
-  ctxB.clearRect(0,0,cb.width,cb.height);
-  burbujas.forEach(b=>{
-    b.y+=b.vy; b.x+=b.vx+Math.sin((b.y+b.fase*40)/60)*.4;
-    if(b.y<-b.r){ Object.assign(b,nuevaBurbuja()); }
-    const g=ctxB.createRadialGradient(b.x-b.r/3,b.y-b.r/3,b.r/6,b.x,b.y,b.r);
-    g.addColorStop(0,'rgba(255,255,255,.9)');
-    g.addColorStop(.4,`hsla(${b.hue},90%,75%,.55)`);
-    g.addColorStop(1,`hsla(${b.hue},90%,65%,.25)`);
-    ctxB.beginPath(); ctxB.arc(b.x,b.y,b.r,0,7); ctxB.fillStyle=g; ctxB.fill();
-    ctxB.strokeStyle='rgba(255,255,255,.6)'; ctxB.stroke();
-  });
-  animCalma=requestAnimationFrame(loopCalma);
-}
-cb.addEventListener('pointerdown',ev=>{
-  if(modo!=='burbujas')return;
-  for(let i=burbujas.length-1;i>=0;i--){
-    const b=burbujas[i], d=Math.hypot(ev.clientX-b.x,ev.clientY-b.y);
-    if(d<b.r){ pop(); Object.assign(b,nuevaBurbuja()); b.y=innerHeight+b.r; break; }
-  }
-});
-$('#btnModoBurbujas').onclick=()=>{ setModo('burbujas'); decir('Toca las burbujas.','burbujas'); };
-$('#btnModoDibujo').onclick=()=>{ setModo('dibujo'); resize(); decir('Dibuja con tu dedo.','dibuja'); };
-$('#btnModoSlime').onclick=()=>{ setModo('slime'); decir('¡Estira el slime mágico! Tócalo para cambiar su color.','slime'); };
-$('#btnModoLuces').onclick=()=>{ setModo('luces'); decir('Toca las luces para encenderlas.','luces'); };
-$('#btnLimpiar').onclick=()=>ctxD.clearRect(0,0,cd.width,cd.height);
-
-/* dibujo */
-let pintando=false,colD=0;
-cd.addEventListener('pointerdown',e=>{pintando=true; colD=(colD+40)%360; ctxD.beginPath(); ctxD.moveTo(e.clientX,e.clientY); beep(500,.08);});
-cd.addEventListener('pointermove',e=>{ if(!pintando)return;
-  ctxD.lineWidth=16; ctxD.lineCap='round'; ctxD.strokeStyle=`hsl(${colD},85%,60%)`;
-  ctxD.lineTo(e.clientX,e.clientY); ctxD.stroke(); });
-addEventListener('pointerup',()=>pintando=false);
-
-/* slime: blob suave de puntos con resortes */
-let sPts=[], sHue=290, sGrab=-1, sDown=false, sMx=0, sMy=0, sMovio=false;
-const S_N=18;
-function iniSlime(){
-  const cx=innerWidth/2, cy=innerHeight/2, R=Math.min(innerWidth,innerHeight)*.22;
-  sPts=Array.from({length:S_N},(_,i)=>{
-    const a=i/S_N*Math.PI*2;
-    return {bx:cx+Math.cos(a)*R, by:cy+Math.sin(a)*R,
-            x:cx+Math.cos(a)*R, y:cy+Math.sin(a)*R, vx:0, vy:0};
-  });
-  loopSlime();
-}
-function loopSlime(){
-  ctxS.clearRect(0,0,cs.width,cs.height);
-  sPts.forEach((p,i)=>{
-    if(i===sGrab && sDown){
-      p.x+=(sMx-p.x)*.4; p.y+=(sMy-p.y)*.4; p.vx=0; p.vy=0;
-      const prev=sPts[(i-1+S_N)%S_N], next=sPts[(i+1)%S_N];
-      prev.vx+=(p.x-prev.x)*.02; prev.vy+=(p.y-prev.y)*.02;
-      next.vx+=(p.x-next.x)*.02; next.vy+=(p.y-next.y)*.02;
-    } else {
-      p.vx+=(p.bx-p.x)*.06; p.vy+=(p.by-p.y)*.06;
-      p.vx*=.86; p.vy*=.86;
-      p.x+=p.vx; p.y+=p.vy;
-    }
-  });
-  ctxS.beginPath();
-  const mid=(a,b)=>({x:(a.x+b.x)/2, y:(a.y+b.y)/2});
-  let m0=mid(sPts[S_N-1],sPts[0]);
-  ctxS.moveTo(m0.x,m0.y);
-  for(let i=0;i<S_N;i++){
-    const p=sPts[i], m=mid(p,sPts[(i+1)%S_N]);
-    ctxS.quadraticCurveTo(p.x,p.y,m.x,m.y);
-  }
-  ctxS.closePath();
-  const c={x:sPts.reduce((s,p)=>s+p.x,0)/S_N, y:sPts.reduce((s,p)=>s+p.y,0)/S_N};
-  const g=ctxS.createRadialGradient(c.x-40,c.y-50,20,c.x,c.y,Math.min(innerWidth,innerHeight)*.34);
-  g.addColorStop(0,`hsl(${sHue},85%,78%)`);
-  g.addColorStop(.6,`hsl(${sHue},80%,62%)`);
-  g.addColorStop(1,`hsl(${sHue},75%,48%)`);
-  ctxS.fillStyle=g; ctxS.fill();
-  ctxS.strokeStyle=`hsla(${sHue},70%,35%,.5)`; ctxS.lineWidth=4; ctxS.stroke();
-  ctxS.beginPath(); ctxS.ellipse(c.x-40,c.y-56,26,14,-.5,0,7);
-  ctxS.fillStyle='rgba(255,255,255,.45)'; ctxS.fill();
-  ctxS.beginPath(); ctxS.arc(c.x-16,c.y-8,6,0,7); ctxS.arc(c.x+18,c.y-8,6,0,7);
-  ctxS.fillStyle='rgba(58,42,77,.85)'; ctxS.fill();
-  ctxS.beginPath(); ctxS.arc(c.x+1,c.y+10,12,0.15*Math.PI,0.85*Math.PI);
-  ctxS.strokeStyle='rgba(58,42,77,.85)'; ctxS.lineWidth=4; ctxS.stroke();
-  animSlime=requestAnimationFrame(loopSlime);
-}
-cs.addEventListener('pointerdown',e=>{
-  sDown=true; sMovio=false; sMx=e.clientX; sMy=e.clientY;
-  let best=1e9;
-  sPts.forEach((p,i)=>{ const d=Math.hypot(p.x-e.clientX,p.y-e.clientY); if(d<best){best=d; sGrab=i;} });
-  if(best>140) sGrab=-1;
-  beep(240,.15,'sine',.12);
-});
-cs.addEventListener('pointermove',e=>{ if(!sDown)return; sMx=e.clientX; sMy=e.clientY;
-  if(Math.hypot(e.movementX||0,e.movementY||0)>2) sMovio=true; });
-addEventListener('pointerup',()=>{
-  if(modo==='slime' && sDown && !sMovio){ sHue=(sHue+70)%360; beep(600,.2,'sine',.15); }
-  if(sDown && sMovio && modo==='slime') beep(320,.2,'sine',.1);
-  sDown=false; sGrab=-1;
-});
-
-/* luces */
-const focoGrid=$('#focoGrid');
-let prendidas=0;
-for(let i=0;i<12;i++){
-  const f=document.createElement('button'); f.className='foco';
-  f.onclick=()=>{
-    f.classList.toggle('on');
-    if(f.classList.contains('on')){ nota(i); prendidas++;
-      if(prendidas===12){ confeti(); decir('¡Encendiste todas las luces! Qué bonito brillan.','lucestodas'); }
-    } else { beep(200,.15,'sine',.1); prendidas--; }
-  };
-  focoGrid.appendChild(f);
-}
-
-/* ================== CASA CON FAMILIA ================== */
-const CASA=[
-  {emo:'📦', nombre:'Laboratorio de cartón',
-   mats:['Caja de cartón','Pintura','Pegamento','Figuras'], yt:'GpDlXmZTfQ8'},
-  {emo:'🫧', nombre:'Slime casero',
-   mats:['Goma escolar','Bicarbonato','Agua','Colorante'], yt:'PYoLwZXLGWU'},
-  {emo:'♻️', nombre:'Maqueta reciclada',
-   mats:['Botellas','Tapas','Tijeras','Cinta'], yt:'RlbxmB6txWI'},
-];
-const gridCasa=$('#gridCasa');
-CASA.forEach(c=>{
-  const d=document.createElement('div'); d.className='expCard';
-  d.innerHTML=`<span class="emo">${c.emo}</span>${c.nombre}`;
-  d.onclick=()=>{ pop(); abrirCasa(c); };
-  gridCasa.appendChild(d);
-});
-function abrirCasa(c){
-  $('#padresTitulo').textContent=c.emo+' '+c.nombre;
-  $('#padresTexto').textContent='Reúnan estos materiales y constrúyanlo en familia. Recuerden: el niño aprende tocando, así que déjenlo explorar.';
-  $('#padresMats').innerHTML=c.mats.map(m=>`<li>${m}</li>`).join('');
-  $('#btnPadresEmpezar').onclick=()=>{
-    $('#overlayPadres').classList.remove('activa');
-    mostrarVideoCasa(c);
-  };
-  $('#overlayPadres').classList.add('activa');
-}
-function mostrarVideoCasa(c){
-  ir('casa');
-  gridCasa.style.display='none';
-  let box=$('#casaVideo');
-  if(!box){ box=document.createElement('div'); box.id='casaVideo';
-    box.style.cssText='display:flex;flex-direction:column;align-items:center;gap:16px';
-    $('#casa').appendChild(box); }
-  box.style.display='flex';
-  const video = c.yt
-    ? videoYT(c.yt)
-    : `<div class="videoBox">🎥 Aquí irá el video del proyecto<br>"${c.nombre}"</div>`;
-  box.innerHTML=`<h2 class="tituloSec">${c.emo} ${c.nombre}</h2>${video}
-    <button class="btn verde" id="volverCasa">◀ Volver</button>`;
-  $('#volverCasa').onclick=()=>{ box.style.display='none'; gridCasa.style.display='grid'; };
-}
-
-/* ================== FONDOS ILUSTRADOS (si existen) ================== */
-(function(){
-  const t=new Image();
-  t.onload=()=>document.body.classList.add('conFondos');
-  t.src='assets/img/fondo-lab.jpg';
-})();
-
-/* ================== CHISPAS AL TOCAR ================== */
 document.addEventListener('pointerdown',ev=>{
   const cont=$('#confeti'), EMO=['✨','⭐','✦'];
   for(let i=0;i<5;i++){
@@ -1410,26 +459,541 @@ document.addEventListener('pointerdown',ev=>{
     s.style.fontSize=(10+Math.random()*12)+'px';
     s.style.setProperty('--dx', Math.cos(a)*d+'px');
     s.style.setProperty('--dy', Math.sin(a)*d+'px');
-    cont.appendChild(s);
-    setTimeout(()=>s.remove(),700);
+    cont.appendChild(s); setTimeout(()=>s.remove(),700);
   }
 },{passive:true});
 
-/* ================== ARRANQUE + ENLACES DIRECTOS (QR) ================== */
-/* Comparte enlaces así:  index.html#exp=flor  ·  #exp=monstruos  ·  #calma  ·  #casa  */
+/* ================== FLUJO INICIAL ================== */
+$('#btnComenzar').onclick=()=>{ pop(); $('#overlayFam').classList.add('activa'); };
+$('#btnFamOk').onclick=()=>{
+  $('#overlayFam').classList.remove('activa');
+  ir('bienvenida');
+  const v=$('#vidBienv'); v.currentTime=0; v.muted=false; v.volume=1;
+  v.play().catch(()=>{}); v.onended=finBienv;
+};
+function finBienv(){
+  $('#vidBienv').pause();
+  if(!musOn) musToggle();
+  ir('arbol');
+  decir('¡Mira el árbol mágico! Toca lo que más te llame la atención.');
+}
+$('#btnSaltar').onclick=finBienv;
+
+/* ================== ÁRBOL ================== */
+const AMBIENTES={
+  vista:{t:'👀 Observo y descubro', txt:'Tu pequeño mirará el mundo a través de colores y descubrirá sombras con la linterna. Luego pueden repetirlo con materiales reales.',
+    mats:['Celofán de colores','Marcos de cartón','Linterna','Lupa infantil','Botellas sensoriales']},
+  oido:{t:'👂 Escucho y descubro', txt:'Tu pequeño tocará el bosque y cada cosa sonará. Acompáñalo nombrando lo que escucha y luego exploren sonidos reales.',
+    mats:['Maracas o botellas con arroz','Tambor o cajas','Tarjetas de animales']},
+  olfato:{t:'👃 Huelo y descubro', txt:'La pantalla invita: tu pequeño toca un frasco y luego lo busca DE VERDAD. Prepara frascos con aromas antes de jugar.',
+    mats:['Frascos con limón, naranja, café, canela, lavanda y hierbabuena','Dado de aromas (opcional)']},
+  tacto:{t:'✋ Toco y descubro', txt:'Tu pequeño sentirá texturas en pantalla y luego en la mesa real. Prepara materiales suaves, ásperos, duros y moldeables.',
+    mats:['Algodón y peluche','Lija fina y corteza','Piedras lisas y madera','Masa casera o plastilina']},
+  gusto:{t:'👅 Pruebo y descubro', txt:'La ruleta elige un sabor y tu pequeño lo prueba DE VERDAD con alimentos seguros. El cacao amargo en muy poquita cantidad.',
+    mats:['Dulce: plátano, yogur, manzana','Ácido: limón, naranja','Salado: galleta, queso','Amargo: cacao puro (poquito)','Bebidas: agua, leche, jugo, yogur']},
+};
+let ramaPend=null;
+document.querySelectorAll('.fruto').forEach(f=>{
+  f.onclick=()=>{
+    pop(); nota(Math.floor(Math.random()*6));
+    ramaPend=f.dataset.rama;
+    const a=AMBIENTES[ramaPend];
+    $('#ambTitulo').textContent=a.t;
+    $('#ambTexto').textContent=a.txt;
+    $('#ambMats').innerHTML=a.mats.map(m=>`<li>${m}</li>`).join('');
+    $('#overlayAmb').classList.add('activa');
+  };
+});
+$('#btnAmbOk').onclick=()=>{
+  $('#overlayAmb').classList.remove('activa');
+  if(ramaPend) ir(ramaPend);
+};
+$('#lunaBtn').onclick=()=>{ pop(); ir('calma'); decir('Hora de descansar. Escucha los sonidos suaves.'); };
+$('#casitaBtn').onclick=()=>{ pop(); ir('familia'); };
+$('#yamiArbol').onclick=()=>{ confeti(['🌸','🌼','💮','🌺','✨']); ir('despedida');
+  decir('Hoy descubriste el mundo usando tus sentidos. ¡Gracias por explorar conmigo!'); };
+
+/* ================== VISTA ================== */
+let lenteOn=null, oscuroOn=false, vistaInit=false;
+const SILUETAS=[
+  {x:22,y:40,svg:'<svg viewBox="0 0 100 100" width="90"><path d="M35 88 Q20 86 20 70 Q20 55 32 50 Q26 42 30 30 Q33 20 40 28 Q42 18 50 18 Q58 18 60 28 Q67 20 70 30 Q74 42 68 50 Q80 55 80 70 Q80 86 65 88 Z" fill="#241d3d"/></svg>'},
+  {x:62,y:30,svg:'<svg viewBox="0 0 100 100" width="80"><path d="M50 80 Q28 80 24 62 Q20 44 38 40 L34 24 L48 34 Q50 32 52 34 L66 24 L62 40 Q80 44 76 62 Q72 80 50 80 Z" fill="#241d3d"/></svg>'},
+  {x:44,y:58,svg:'<svg viewBox="0 0 100 100" width="86"><ellipse cx="42" cy="60" rx="26" ry="18" fill="#241d3d"/><circle cx="68" cy="48" r="12" fill="#241d3d"/><path d="M76 40 L84 30 L80 44 Z" fill="#241d3d"/><path d="M16 66 Q6 70 10 78" stroke="#241d3d" stroke-width="6" fill="none" stroke-linecap="round"/></svg>'},
+];
+function iniVista(){
+  if(!vistaInit){
+    vistaInit=true;
+    const cont=$('#siluetas');
+    SILUETAS.forEach((s,i)=>{
+      const d=document.createElement('div'); d.className='silueta'; d.id='sil'+i;
+      d.style.left=s.x+'%'; d.style.top=s.y+'%'; d.innerHTML=s.svg;
+      cont.appendChild(d);
+    });
+    document.querySelectorAll('.lente').forEach(l=>{
+      l.addEventListener('pointerdown',ev=>{
+        ev.stopPropagation(); pop();
+        if(lenteOn===l){ l.classList.remove('on'); lenteOn=null; $('#tinte').style.opacity='0'; }
+        else{
+          document.querySelectorAll('.lente').forEach(x=>x.classList.remove('on'));
+          l.classList.add('on'); lenteOn=l;
+          $('#tinte').style.background=`rgba(${l.dataset.col},.55)`;
+          $('#tinte').style.opacity='1';
+          decir('¡Mira! Todo cambió de color.');
+        }
+      });
+    });
+    const esc=$('#vista'); let hold=null;
+    esc.addEventListener('pointerdown',ev=>{
+      if(ev.target.classList.contains('lente')) return;
+      hold=setTimeout(()=>{ oscuroOn=true; linterna(ev.clientX,ev.clientY);
+        decir('¡Shhh! Busca las sombras con tu linterna.'); },380);
+    });
+    esc.addEventListener('pointermove',ev=>{ if(oscuroOn) linterna(ev.clientX,ev.clientY); });
+    addEventListener('pointerup',()=>{ clearTimeout(hold);
+      if(oscuroOn){ oscuroOn=false; $('#oscuro').style.opacity='0';
+        document.querySelectorAll('.silueta').forEach(s=>s.style.opacity='0'); } });
+  }
+  lenteOn=null; $('#tinte').style.opacity='0';
+  document.querySelectorAll('.lente').forEach(x=>x.classList.remove('on'));
+  $('#oscuro').style.opacity='0';
+  decir('Toca un color mágico y mira el mundo. Si dejas tu dedo quieto, ¡aparece la linterna!');
+}
+function linterna(x,y){
+  const o=$('#oscuro');
+  o.style.background=`radial-gradient(circle 110px at ${x}px ${y}px, rgba(8,6,26,0) 0%, rgba(8,6,26,.35) 60%, rgba(8,6,26,.93) 100%)`;
+  o.style.opacity='1';
+  document.querySelectorAll('.silueta').forEach(s=>{
+    const r=s.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+    s.style.opacity=(Math.hypot(x-cx,y-cy)<150)?'1':'0';
+  });
+  if(Math.random()<.05) beep(700+Math.random()*300,.15,'sine',.06);
+}
+
+/* ================== OÍDO ================== */
+let oidoInit=false;
+const SPRITES_OIDO=[
+  {id:'pajaro', x:27, y:22, w:13, snd:'pajaro',
+   svg:'<svg viewBox="0 0 100 100"><ellipse cx="46" cy="55" rx="26" ry="20" fill="#5cc8ff" stroke="#2f9fd6" stroke-width="3"/><circle cx="68" cy="42" r="14" fill="#7dd3ff" stroke="#2f9fd6" stroke-width="3"/><path d="M80 40 L92 36 L82 46 Z" fill="#ffab5e"/><circle cx="72" cy="39" r="3.4" fill="#3a2a4d"/><path d="M30 50 Q16 46 20 60 Q28 62 34 58 Z" fill="#2f9fd6"/><path d="M40 74 L38 84 M52 74 L54 84" stroke="#f18f2f" stroke-width="3.6" stroke-linecap="round"/></svg>'},
+  {id:'nube', x:58, y:9, w:17, snd:'lluvia',
+   svg:'<svg viewBox="0 0 100 70"><ellipse cx="50" cy="42" rx="36" ry="18" fill="#fff"/><circle cx="30" cy="34" r="15" fill="#fff"/><circle cx="54" cy="26" r="18" fill="#fff"/><circle cx="74" cy="36" r="13" fill="#fff"/><g class="gotasN" opacity="0"><line x1="34" y1="58" x2="32" y2="66" stroke="#5cc8ff" stroke-width="4" stroke-linecap="round"/><line x1="52" y1="60" x2="50" y2="68" stroke="#5cc8ff" stroke-width="4" stroke-linecap="round"/><line x1="68" y1="58" x2="66" y2="66" stroke="#5cc8ff" stroke-width="4" stroke-linecap="round"/></g></svg>'},
+  {id:'rio', x:0, y:76, w:58, h:22, snd:'rio', invisible:true},
+  {id:'hojas', x:4, y:6, w:24, h:40, snd:'hojas', invisible:true},
+  {id:'tambor', x:66, y:54, w:14, snd:'tambor',
+   svg:'<svg viewBox="0 0 100 100"><ellipse cx="50" cy="38" rx="32" ry="12" fill="#ffe9c2" stroke="#c98a00" stroke-width="3"/><path d="M18 38 L18 68 Q18 80 50 80 Q82 80 82 68 L82 38" fill="#e0559a" stroke="#a2246a" stroke-width="3"/><path d="M26 44 L40 72 M74 44 L60 72" stroke="#ffd84d" stroke-width="4"/><line x1="30" y1="18" x2="44" y2="34" stroke="#8a5a3b" stroke-width="4" stroke-linecap="round"/><circle cx="28" cy="16" r="6" fill="#ffd84d"/><line x1="70" y1="18" x2="56" y2="34" stroke="#8a5a3b" stroke-width="4" stroke-linecap="round"/><circle cx="72" cy="16" r="6" fill="#ffd84d"/></svg>'},
+];
+const FRASES_OIDO={pajaro:'¡Un pajarito canta!', lluvia:'¡La nube suelta lluvia!', rio:'¡El río suena!', hojas:'¡Crujen las hojas!', tambor:'¡Pum, pum, el tambor!'};
+function iniOido(){
+  if(oidoInit) { decir('Toca el bosque y escucha.'); return; }
+  oidoInit=true;
+  const cont=$('#spritesOido');
+  SPRITES_OIDO.forEach(sp=>{
+    const b=document.createElement('button');
+    b.className='sprite';
+    b.style.left=sp.x+'%'; b.style.top=sp.y+'%'; b.style.width=sp.w+'%';
+    if(sp.h) b.style.height=sp.h+'%';
+    if(sp.svg){ b.innerHTML=sp.svg; b.style.animation='flota 3.5s ease-in-out infinite'; }
+    else { b.style.background='rgba(255,255,255,0)'; }
+    b.onclick=()=>{
+      playSnd(sp.snd); decir(FRASES_OIDO[sp.snd]);
+      b.classList.remove('brinca'); void b.offsetWidth; b.classList.add('brinca');
+      if(sp.id==='nube'){ const g=b.querySelector('.gotasN'); if(g){ g.setAttribute('opacity','1');
+        setTimeout(()=>g.setAttribute('opacity','0'),2200); } }
+      if(sp.id==='hojas'||sp.id==='rio'){
+        for(let i=0;i<6;i++){
+          const s=document.createElement('span'); s.className='olita';
+          s.textContent=sp.id==='hojas'?'🍃':'💧';
+          const r=b.getBoundingClientRect();
+          s.style.left=(r.left+Math.random()*r.width)+'px';
+          s.style.top=(r.top+r.height*.4)+'px';
+          s.style.position='fixed';
+          document.body.appendChild(s); setTimeout(()=>s.remove(),1600);
+        }
+      }
+    };
+    cont.appendChild(b);
+  });
+  decir('Toca el bosque y escucha. ¡Todo suena!');
+}
+/* ================== OLFATO ================== */
+let olfatoInit=false;
+const FRASCOS=[
+  {id:'limon', nom:'limón', col:'#ffe98a', borde:'#e0a92e', dib:'<circle cx="50" cy="62" r="14" fill="#ffd84d" stroke="#c98a00" stroke-width="2.6"/><ellipse cx="50" cy="62" rx="7" ry="10" fill="#fff3b0" opacity=".7"/>'},
+  {id:'naranja', nom:'naranja', col:'#ffcf9e', borde:'#f18f2f', dib:'<circle cx="50" cy="62" r="14" fill="#ffab5e" stroke="#d2691e" stroke-width="2.6"/><circle cx="50" cy="50" r="3" fill="#76d275"/>'},
+  {id:'cafe', nom:'café', col:'#d9b38c', borde:'#8a5a3b', dib:'<ellipse cx="44" cy="60" rx="7" ry="10" fill="#6b4226" transform="rotate(-16 44 60)"/><ellipse cx="58" cy="64" rx="7" ry="10" fill="#8a5a3b" transform="rotate(18 58 64)"/><path d="M44 54 L44 66 M58 58 L58 70" stroke="#4a2c16" stroke-width="1.8"/>'},
+  {id:'canela', nom:'canela', col:'#ecc9a3', borde:'#b4764a', dib:'<rect x="36" y="52" width="9" height="24" rx="4" fill="#b4764a" transform="rotate(-12 40 64)"/><rect x="52" y="52" width="9" height="24" rx="4" fill="#9c5f38" transform="rotate(10 56 64)"/>'},
+  {id:'lavanda', nom:'lavanda', col:'#d9c6ff', borde:'#7c5cff', dib:'<path d="M50 76 L50 54" stroke="#4caf50" stroke-width="3"/><ellipse cx="50" cy="52" rx="6" ry="10" fill="#9b7bff"/><ellipse cx="44" cy="60" rx="4.6" ry="7" fill="#b39dfc"/><ellipse cx="56" cy="60" rx="4.6" ry="7" fill="#b39dfc"/>'},
+  {id:'hierbabuena', nom:'hierbabuena', col:'#c9f2c0', borde:'#4caf50', dib:'<path d="M50 78 L50 56" stroke="#3e8e41" stroke-width="3"/><ellipse cx="42" cy="58" rx="9" ry="6" fill="#76d275" transform="rotate(-28 42 58)"/><ellipse cx="58" cy="58" rx="9" ry="6" fill="#5bb35a" transform="rotate(28 58 58)"/><ellipse cx="50" cy="48" rx="8" ry="6" fill="#8fe38d"/>'},
+];
+function frascoSVG(f){
+  return `<svg viewBox="0 0 100 110">
+    <rect x="38" y="14" width="24" height="10" rx="3" fill="${f.borde}"/>
+    <path d="M32 26 Q28 32 28 42 L28 88 Q28 98 38 98 L62 98 Q72 98 72 88 L72 42 Q72 32 68 26 Z"
+      fill="${f.col}" stroke="${f.borde}" stroke-width="3" opacity=".92"/>
+    ${f.dib}
+    <ellipse cx="42" cy="40" rx="5" ry="12" fill="#fff" opacity=".5"/>
+  </svg>`;
+}
+function iniOlfato(){
+  if(olfatoInit){ decir('Toca un frasco y luego huélelo de verdad.'); return; }
+  olfatoInit=true;
+  const cont=$('#frascosWrap');
+  FRASCOS.forEach((f,i)=>{
+    const b=document.createElement('button');
+    b.className='sprite'; b.innerHTML=frascoSVG(f);
+    b.style.left=(7+i*15)+'%'; b.style.top='44%'; b.style.width='12%';
+    b.style.animation='flota 3.8s '+(i*.3)+'s ease-in-out infinite';
+    b.onclick=()=>{
+      pop(); nota(i);
+      b.classList.remove('brinca'); void b.offsetWidth; b.classList.add('brinca');
+      const r=b.getBoundingClientRect();
+      for(let k=0;k<4;k++){
+        const s=document.createElement('span'); s.className='olita'; s.textContent='〰️';
+        s.style.position='fixed';
+        s.style.left=(r.left+r.width*.3+Math.random()*r.width*.4)+'px';
+        s.style.top=(r.top)+'px';
+        s.style.animationDelay=(k*.18)+'s';
+        document.body.appendChild(s); setTimeout(()=>s.remove(),1900);
+      }
+      decir('¡'+f.nom+'! Mmm... ¿lo hueles de verdad? ¡Busca tu frasco!');
+    };
+    cont.appendChild(b);
+  });
+  const dado=document.createElement('button');
+  dado.className='sprite'; dado.id='dadoAromas';
+  dado.style.right='4%'; dado.style.bottom='6%'; dado.style.width='13%';
+  dado.innerHTML=`<svg viewBox="0 0 100 100">
+    <rect x="14" y="14" width="72" height="72" rx="16" fill="#fff" stroke="#9b7bff" stroke-width="4"/>
+    <circle cx="34" cy="34" r="7" fill="#ff5fa8"/><circle cx="66" cy="34" r="7" fill="#5cc8ff"/>
+    <circle cx="50" cy="50" r="7" fill="#ffd84d"/><circle cx="34" cy="66" r="7" fill="#76d275"/>
+    <circle cx="66" cy="66" r="7" fill="#9b7bff"/></svg>`;
+  dado.onclick=()=>{
+    dado.style.animation='tiembla .5s ease 2';
+    beep(300,.2,'square',.1);
+    setTimeout(()=>{
+      dado.style.animation='';
+      const f=FRASCOS[Math.floor(Math.random()*FRASCOS.length)];
+      const btn=cont.children[FRASCOS.indexOf(f)];
+      btn.classList.remove('brinca'); void btn.offsetWidth; btn.classList.add('brinca');
+      confeti(['✨','⭐']);
+      decir('¡El dado eligió '+f.nom+'! Busca ese frasco y huélelo.');
+    },1100);
+  };
+  cont.appendChild(dado);
+  decir('Toca un frasco del jardín y luego huélelo de verdad.');
+}
+
+/* ================== TACTO ================== */
+let tactoInit=false, masaPts=[], masaAnim=null, masaHue=32, mGrab=-1, mDown=false, mMx=0, mMy=0;
+function iniTacto(){
+  decir('Pasa tu dedo por las texturas. ¿Cuál te gusta más?');
+  iniMasa();
+  if(tactoInit) return;
+  tactoInit=true;
+  let last=0;
+  $('#texAlgodon').addEventListener('pointermove',ev=>{
+    if(Date.now()-last<90) return; last=Date.now();
+    const p=document.createElement('span'); p.className='pelusa';
+    const r=$('#texAlgodon').getBoundingClientRect();
+    p.style.left=(ev.clientX-r.left-8)+'px'; p.style.top=(ev.clientY-r.top-8)+'px';
+    p.style.width=p.style.height=(12+Math.random()*14)+'px';
+    $('#texAlgodon').appendChild(p); setTimeout(()=>p.remove(),1000);
+    beep(180+Math.random()*80,.25,'sine',.05);
+  });
+  $('#texAlgodon').addEventListener('pointerdown',()=>decir('Suave... como una nubecita.'));
+  let lastL=0;
+  $('#texLija').addEventListener('pointermove',ev=>{
+    if(Date.now()-lastL<70) return; lastL=Date.now();
+    beep(70+Math.random()*40,.06,'sawtooth',.12);
+    if(navigator.vibrate) navigator.vibrate(20);
+  });
+  $('#texLija').addEventListener('pointerdown',()=>decir('¡Áspera! Raspa un poquito.'));
+  $('#texPiedra').addEventListener('pointerdown',ev=>{
+    beep(120,.1,'square',.2); setTimeout(()=>beep(90,.12,'square',.15),120);
+    decir('Dura como una piedra. Toc, toc.');
+  });
+}
+function iniMasa(){
+  cancelAnimationFrame(masaAnim);
+  const cv=$('#masaCanvas'), ctx=cv.getContext('2d');
+  const r=cv.parentElement.getBoundingClientRect();
+  cv.width=r.width; cv.height=r.height;
+  const cx=cv.width/2, cy=cv.height/2, R=Math.min(cv.width,cv.height)*.3, N=14;
+  masaPts=Array.from({length:N},(_,i)=>{
+    const a=i/N*Math.PI*2;
+    return {bx:cx+Math.cos(a)*R, by:cy+Math.sin(a)*R, x:cx+Math.cos(a)*R, y:cy+Math.sin(a)*R, vx:0, vy:0};
+  });
+  (function loop(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const N=masaPts.length;
+    masaPts.forEach((p,i)=>{
+      if(i===mGrab && mDown){ p.x+=(mMx-p.x)*.4; p.y+=(mMy-p.y)*.4; p.vx=p.vy=0;
+        const pr=masaPts[(i-1+N)%N], nx=masaPts[(i+1)%N];
+        pr.vx+=(p.x-pr.x)*.02; pr.vy+=(p.y-pr.y)*.02;
+        nx.vx+=(p.x-nx.x)*.02; nx.vy+=(p.y-nx.y)*.02;
+      } else { p.vx+=(p.bx-p.x)*.06; p.vy+=(p.by-p.y)*.06; p.vx*=.86; p.vy*=.86; p.x+=p.vx; p.y+=p.vy; }
+    });
+    ctx.beginPath();
+    const mid=(a,b)=>({x:(a.x+b.x)/2,y:(a.y+b.y)/2});
+    let m0=mid(masaPts[N-1],masaPts[0]); ctx.moveTo(m0.x,m0.y);
+    for(let i=0;i<N;i++){ const p=masaPts[i], m=mid(p,masaPts[(i+1)%N]); ctx.quadraticCurveTo(p.x,p.y,m.x,m.y); }
+    ctx.closePath();
+    const c={x:masaPts.reduce((s,p)=>s+p.x,0)/N, y:masaPts.reduce((s,p)=>s+p.y,0)/N};
+    const g=ctx.createRadialGradient(c.x-20,c.y-26,10,c.x,c.y,Math.min(cv.width,cv.height)*.42);
+    g.addColorStop(0,`hsl(${masaHue},68%,74%)`); g.addColorStop(1,`hsl(${masaHue},60%,52%)`);
+    ctx.fillStyle=g; ctx.fill();
+    ctx.strokeStyle=`hsla(${masaHue},55%,38%,.6)`; ctx.lineWidth=3; ctx.stroke();
+    masaAnim=requestAnimationFrame(loop);
+  })();
+  if(!cv.dataset.ev){
+    cv.dataset.ev='1';
+    cv.addEventListener('pointerdown',e=>{
+      const r=cv.getBoundingClientRect(); mDown=true; mMx=e.clientX-r.left; mMy=e.clientY-r.top;
+      let best=1e9; masaPts.forEach((p,i)=>{ const d=Math.hypot(p.x-mMx,p.y-mMy); if(d<best){best=d;mGrab=i;} });
+      beep(240,.15,'sine',.1);
+    });
+    cv.addEventListener('pointermove',e=>{ if(!mDown)return; const r=cv.getBoundingClientRect();
+      mMx=e.clientX-r.left; mMy=e.clientY-r.top; });
+    addEventListener('pointerup',()=>{ if(mDown && Math.random()<.4){ masaHue=(masaHue+60)%360; }
+      mDown=false; mGrab=-1; });
+    cv.parentElement.addEventListener('pointerdown',()=>decir('¡Estírala! Es blandita.'),{once:true});
+  }
+}
+
+/* ================== GUSTO ================== */
+let gustoInit=false, ruletaGiro=0, ruletaOcupada=false;
+const SABORES=[
+  {nom:'dulce', col:'#ff8fc7', emo:'🍭', frase:'¡Dulce! Como el plátano y el yogur. ¿Probamos algo dulce de verdad?',
+   cara:'<ellipse cx="100" cy="120" rx="46" ry="70" fill="#ffe98a" stroke="#e0a92e" stroke-width="5"/><path d="M100 50 Q112 30 128 32" stroke="#8a5a3b" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="86" cy="106" r="7" fill="#3a2a4d"/><circle cx="114" cy="106" r="7" fill="#3a2a4d"/><path d="M84 132 Q100 148 116 132" stroke="#3a2a4d" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="76" cy="122" r="7" fill="#ffb3d5" opacity=".8"/><circle cx="124" cy="122" r="7" fill="#ffb3d5" opacity=".8"/>'},
+  {nom:'ácido', col:'#ffd84d', emo:'🍋', frase:'¡Ácido! Uyy, como el limón. ¡Mira qué carita! ¿Lo pruebas de verdad?',
+   cara:'<ellipse cx="100" cy="115" rx="62" ry="48" fill="#ffd84d" stroke="#c98a00" stroke-width="5"/><path d="M78 100 Q84 92 90 100 M110 100 Q116 92 122 100" stroke="#3a2a4d" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="100" cy="134" rx="10" ry="6" fill="#3a2a4d"/><path d="M56 88 Q48 80 52 72 M144 88 Q152 80 148 72" stroke="#c98a00" stroke-width="4" fill="none"/>'},
+  {nom:'salado', col:'#9adcff', emo:'🧂', frase:'¡Salado! Como la galletita y el quesito. ¿Probamos?',
+   cara:'<rect x="52" y="76" width="96" height="86" rx="18" fill="#ffe9c2" stroke="#c98a00" stroke-width="5"/><circle cx="72" cy="96" r="4" fill="#c98a00"/><circle cx="120" cy="90" r="4" fill="#c98a00"/><circle cx="96" cy="150" r="4" fill="#c98a00"/><circle cx="84" cy="112" r="6.4" fill="#3a2a4d"/><circle cx="116" cy="112" r="6.4" fill="#3a2a4d"/><path d="M84 134 Q100 146 116 134" stroke="#3a2a4d" stroke-width="5" fill="none" stroke-linecap="round"/>'},
+  {nom:'amargo', col:'#b48a6a', emo:'🍫', frase:'¡Amargo! Como el cacao. Solo un poquitito con mamá o papá.',
+   cara:'<rect x="54" y="70" width="92" height="96" rx="14" fill="#8a5a3b" stroke="#5a3620" stroke-width="5"/><line x1="100" y1="70" x2="100" y2="166" stroke="#5a3620" stroke-width="4"/><line x1="54" y1="118" x2="146" y2="118" stroke="#5a3620" stroke-width="4"/><circle cx="82" cy="98" r="6" fill="#fff"/><circle cx="118" cy="98" r="6" fill="#fff"/><circle cx="82" cy="99" r="3.4" fill="#3a2a4d"/><circle cx="118" cy="99" r="3.4" fill="#3a2a4d"/><path d="M86 142 Q100 136 114 142" stroke="#ffe9c2" stroke-width="5" fill="none" stroke-linecap="round"/>'},
+];
+const BEBIDAS=[
+  {nom:'agua', col:'rgba(180,225,255,.75)', borde:'#5cc8ff', frase:'¡Agua fresquita! Glu, glu.'},
+  {nom:'leche', col:'#fff', borde:'#d8cbe8', frase:'¡Lechita! Mmm, rica.'},
+  {nom:'jugo', col:'#ffab5e', borde:'#f18f2f', frase:'¡Juguito de naranja!'},
+  {nom:'yogur', col:'#ffc4e2', borde:'#ff5fa8', frase:'¡Yogur! Cremosito.'},
+];
+function iniGusto(){
+  decir('Toca la ruleta para descubrir un sabor.');
+  if(gustoInit) return;
+  gustoInit=true;
+  const svg=$('#ruletaSvg');
+  let paths='';
+  SABORES.forEach((s,i)=>{
+    const a0=(i*90-90)*Math.PI/180, a1=((i+1)*90-90)*Math.PI/180;
+    const x0=Math.cos(a0)*100, y0=Math.sin(a0)*100, x1=Math.cos(a1)*100, y1=Math.sin(a1)*100;
+    const mx=Math.cos((a0+a1)/2)*62, my=Math.sin((a0+a1)/2)*62;
+    paths+=`<path d="M0 0 L${x0} ${y0} A100 100 0 0 1 ${x1} ${y1} Z" fill="${s.col}" stroke="#fff" stroke-width="4"/>
+      <text x="${mx}" y="${my+9}" font-size="30" text-anchor="middle">${s.emo}</text>`;
+  });
+  svg.innerHTML=paths+'<circle cx="0" cy="0" r="16" fill="#fff" stroke="#d8cbe8" stroke-width="4"/>';
+  $('#ruletaWrap').onclick=()=>{
+    if(ruletaOcupada) return; ruletaOcupada=true;
+    $('#hintGusto').style.visibility='hidden';
+    const extra=1440+Math.random()*360;
+    ruletaGiro+=extra;
+    svg.style.transform=`rotate(${ruletaGiro}deg)`;
+    beep(400,.2,'sine',.15);
+    const iv=setInterval(()=>beep(300+Math.random()*200,.05,'sine',.06),200);
+    setTimeout(()=>{
+      clearInterval(iv);
+      const ang=((-ruletaGiro % 360)+360+270)%360;
+      const s=SABORES[Math.floor(ang/90)%4];
+      $('#comidaSvg').innerHTML=s.cara;
+      $('#comidaPop').classList.add('on');
+      confeti(['✨','💛','⭐']);
+      decir(s.frase);
+      setTimeout(()=>{ $('#comidaPop').classList.remove('on'); ruletaOcupada=false;
+        $('#hintGusto').style.visibility='visible'; },3400);
+    },3300);
+  };
+  $('#comidaPop').onclick=()=>{ $('#comidaPop').classList.remove('on'); ruletaOcupada=false;
+    $('#hintGusto').style.visibility='visible'; };
+  const row=$('#vasosRow');
+  BEBIDAS.forEach((b,i)=>{
+    const v=document.createElement('button');
+    v.className='vaso';
+    v.innerHTML=`<svg viewBox="0 0 100 110">
+      <path d="M26 18 L32 92 Q33 100 50 100 Q67 100 68 92 L74 18 Z" fill="rgba(230,240,255,.5)" stroke="#9fc6e8" stroke-width="3"/>
+      <path d="M30 42 L33 90 Q34 97 50 97 Q66 97 67 90 L70 42 Z" fill="${b.col}" stroke="${b.borde}" stroke-width="2"/>
+      <circle cx="43" cy="62" r="3.4" fill="#3a2a4d"/><circle cx="57" cy="62" r="3.4" fill="#3a2a4d"/>
+      <path d="M43 72 Q50 78 57 72" stroke="#3a2a4d" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <ellipse cx="50" cy="18" rx="24" ry="6" fill="#eaf6ff" stroke="#9fc6e8" stroke-width="3"/>
+    </svg><div style="font-size:13px;font-weight:700;color:#7a5a8a">${b.nom}</div>`;
+    v.onclick=()=>{
+      v.classList.remove('wob'); void v.offsetWidth; v.classList.add('wob');
+      beep(300,.1,'sine',.15); setTimeout(()=>beep(260,.1,'sine',.12),150); setTimeout(()=>beep(220,.12,'sine',.1),300);
+      decir(b.frase+' ¿La pruebas de verdad?');
+    };
+    row.appendChild(v);
+  });
+}
+
+/* ================== FAMILIA ================== */
+const PROPUESTAS=[
+  {emo:'🧺', nom:'Cesta de los tesoros', yt:'HYOrWiLz29w',
+   txt:'Una cesta con objetos naturales y cotidianos seguros para que el niño los descubra a su ritmo.',
+   mats:['Cesta o caja baja','Objetos de madera, tela y metal seguros','Elementos naturales grandes'],
+   consejo:'💡 Deja que el niño elija qué sacar. No le muestres "cómo se usa": obsérvalo descubrir.'},
+  {emo:'🔮', nom:'Holograma 3D', yt:'qsLf7Brk30E',
+   txt:'Con cartón y acetato se construye una pirámide que proyecta imágenes en 3D desde el celular.',
+   mats:['Acetato o mica transparente','Cartón','Tijeras y cinta','Celular con video de holograma'],
+   consejo:'💡 Úsenlo en un cuarto oscuro para el efecto mágico. El asombro compartido vale oro.'},
+  {emo:'🌿', nom:'Caja de aromas', yt:'SG_RW93UicI',
+   txt:'Frascos con aromas de la cocina para oler y descubrir, cada uno con su ilustración.',
+   mats:['Frascos pequeños','Limón, naranja, café, canela, lavanda, hierbabuena','Etiquetas con dibujos'],
+   consejo:'💡 Ofrece un frasco a la vez y nombra el aroma. Si un olor no le gusta, respétalo.'},
+  {emo:'💧', nom:'Exploración con agua', yt:'UhKB7hdoG34',
+   txt:'Recipientes con agua y utensilios para trasvasar, exprimir y descubrir.',
+   mats:['Recipiente grande con poca agua','Vasos, embudos, coladores','Esponjas y toalla'],
+   consejo:'💡 Siempre con supervisión. Prepara el piso para mojarse sin problema: la libertad es la clave.'},
+  {emo:'🍊', nom:'Descubriendo frutas', yt:'XAsMl7HOpGw',
+   txt:'Frutas enteras y cortadas para mirar, tocar, oler y probar.',
+   mats:['Frutas de colores distintos','Tabla y platos','Fruta cortada segura para probar'],
+   consejo:'💡 Deja que toque y huela antes de probar. Nombra cada fruta con calma.'},
+  {emo:'🌼', nom:'Naturaleza en casa', yt:'DEkUdrGrnyU',
+   txt:'Un rinconcito con hojas, flores, semillas y piedras recolectadas juntos.',
+   mats:['Hojas, flores y semillas grandes','Piedras lisas','Bandeja o canasta'],
+   consejo:'💡 Recolecten juntos en el parque: el paseo también es exploración.'},
+  {emo:'🫓', nom:'Mesa de masas sensoriales', yt:'I_BwWKlk8Rg',
+   txt:'Masa casera segura para amasar, estirar y moldear libremente.',
+   mats:['Harina, agua y sal (masa casera)','Colorante natural','Mantel o bandeja'],
+   consejo:'💡 La masa casera es segura si se la lleva a la boca. Amasen juntos, sin un "modelo" que copiar.'},
+];
+const gridFam=$('#gridFam');
+PROPUESTAS.forEach(p=>{
+  const d=document.createElement('div'); d.className='famCard';
+  d.innerHTML=`<span class="emo">${p.emo}</span>${p.nom}`;
+  d.onclick=()=>{
+    pop();
+    $('#propTitulo').textContent=p.emo+' '+p.nom;
+    $('#propTexto').textContent=p.txt;
+    $('#propMats').innerHTML=p.mats.map(m=>`<li>${m}</li>`).join('');
+    $('#propConsejo').textContent=p.consejo;
+    $('#propVideo').innerHTML=p.yt?videoYT(p.yt):'';
+    $('#overlayProp').classList.add('activa');
+  };
+  gridFam.appendChild(d);
+});
+$('#btnPropOk').onclick=()=>{ $('#overlayProp').classList.remove('activa'); $('#propVideo').innerHTML=''; };
+function videoYT(id){
+  if(location.protocol==='file:'){
+    return `<a class="videoBox" style="position:relative;text-decoration:none"
+      href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">
+      <img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="Video"
+        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.8">
+      <span style="position:relative;color:#fff;font-weight:700;font-size:20px;text-shadow:0 2px 8px #000">▶ Ver video</span></a>`;
+  }
+  return `<div class="videoBox"><iframe loading="lazy"
+    src="https://www.youtube-nocookie.com/embed/${id}?rel=0"
+    allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
+}
+
+/* ================== CALMA ================== */
+const cb=$('#lienzoBurbujas'), ctxB=cb.getContext('2d');
+let burbujas=[], animCalma=null;
+const musCalma=$('#musCalma'), asmrAudio=$('#asmrAudio');
+let asmrOn=null;
+function nuevaBurbuja(){
+  const r=22+Math.random()*40;
+  return {x:Math.random()*innerWidth, y:innerHeight+r, r,
+    vy:-(.5+Math.random()*.9), vx:(Math.random()-.5)*.5,
+    hue:200+Math.random()*120, fase:Math.random()*6};
+}
+function pararCalma(){
+  cancelAnimationFrame(animCalma);
+  asmrAudio.pause(); musCalma.pause(); asmrOn=null;
+  document.querySelectorAll('.asmrBtn').forEach(b=>b.classList.remove('on'));
+  if(musOn) musica.volume=VOL;
+}
+function iniCalma(){
+  cb.width=innerWidth; cb.height=innerHeight;
+  burbujas=Array.from({length:12},nuevaBurbuja);
+  cancelAnimationFrame(animCalma); loopCalma();
+  if(musOn) musica.volume=.02;
+}
+function loopCalma(){
+  ctxB.clearRect(0,0,cb.width,cb.height);
+  burbujas.forEach(b=>{
+    b.y+=b.vy; b.x+=b.vx+Math.sin((b.y+b.fase*40)/60)*.4;
+    if(b.y<-b.r) Object.assign(b,nuevaBurbuja());
+    const g=ctxB.createRadialGradient(b.x-b.r/3,b.y-b.r/3,b.r/6,b.x,b.y,b.r);
+    g.addColorStop(0,'rgba(255,255,255,.85)');
+    g.addColorStop(.4,`hsla(${b.hue},80%,75%,.4)`);
+    g.addColorStop(1,`hsla(${b.hue},80%,65%,.15)`);
+    ctxB.beginPath(); ctxB.arc(b.x,b.y,b.r,0,7); ctxB.fillStyle=g; ctxB.fill();
+    ctxB.strokeStyle='rgba(255,255,255,.45)'; ctxB.stroke();
+  });
+  animCalma=requestAnimationFrame(loopCalma);
+}
+cb.addEventListener('pointerdown',ev=>{
+  for(let i=burbujas.length-1;i>=0;i--){
+    const b=burbujas[i], d=Math.hypot(ev.clientX-b.x,ev.clientY-b.y);
+    if(d<b.r){ beep(400+Math.random()*300,.3,'sine',.12); Object.assign(b,nuevaBurbuja()); return; }
+  }
+  if(ev.clientY<innerHeight*.6){
+    const s=document.createElement('span'); s.className='estrellaC';
+    s.textContent=['✦','✧','⭐','✨'][Math.floor(Math.random()*4)];
+    s.style.left=ev.clientX+'px'; s.style.top=ev.clientY+'px';
+    s.style.fontSize=(14+Math.random()*18)+'px';
+    $('#cieloEstrellas').appendChild(s);
+    nota(Math.floor(Math.random()*6));
+    if($('#cieloEstrellas').children.length>40) $('#cieloEstrellas').firstChild.remove();
+  }
+});
+document.querySelectorAll('.asmrBtn[data-asmr]').forEach(b=>{
+  b.onclick=()=>{
+    const k=b.dataset.asmr;
+    if(asmrOn===k){
+      asmrAudio.pause(); asmrOn=null; b.classList.remove('on');
+      if(musOn && musCalma.paused) musica.play().catch(()=>{});
+      return;
+    }
+    document.querySelectorAll('.asmrBtn[data-asmr]').forEach(x=>x.classList.remove('on'));
+    asmrOn=k; b.classList.add('on');
+    musica.pause(); musCalma.pause(); $('#btnMusCalma').classList.remove('on');
+    asmrAudio.src='assets/asmr/'+k+'.mp3'; asmrAudio.volume=.75;
+    asmrAudio.play().catch(()=>{});
+  };
+});
+$('#btnMusCalma').onclick=function(){
+  if(musCalma.paused){
+    musCalma.volume=.4; musCalma.play().catch(()=>{}); this.classList.add('on');
+    musica.pause();
+    asmrAudio.pause(); asmrOn=null;
+    document.querySelectorAll('.asmrBtn[data-asmr]').forEach(x=>x.classList.remove('on'));
+  }
+  else { musCalma.pause(); this.classList.remove('on'); if(musOn) musica.play().catch(()=>{}); }
+};
+$('#ositoSvg').innerHTML=`
+  <circle cx="60" cy="52" r="24" fill="#c89b6e"/><circle cx="140" cy="52" r="24" fill="#c89b6e"/>
+  <circle cx="60" cy="54" r="13" fill="#e8c9a0"/><circle cx="140" cy="54" r="13" fill="#e8c9a0"/>
+  <ellipse cx="100" cy="105" rx="66" ry="62" fill="#c89b6e"/>
+  <ellipse cx="100" cy="128" rx="34" ry="26" fill="#e8c9a0"/>
+  <circle cx="80" cy="92" r="8" fill="#3a2a4d"/><circle cx="120" cy="92" r="8" fill="#3a2a4d"/>
+  <circle cx="83" cy="89" r="2.6" fill="#fff"/><circle cx="123" cy="89" r="2.6" fill="#fff"/>
+  <ellipse cx="100" cy="116" rx="9" ry="7" fill="#3a2a4d"/>
+  <path d="M100 123 L100 132 M100 132 Q88 142 80 134 M100 132 Q112 142 120 134"
+    stroke="#3a2a4d" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <circle cx="66" cy="112" r="7" fill="#f4b8c8" opacity=".7"/><circle cx="134" cy="112" r="7" fill="#f4b8c8" opacity=".7"/>
+  <ellipse cx="100" cy="196" rx="46" ry="14" fill="rgba(255,230,180,.25)"/>`;
+
+/* ================== ARRANQUE + RUTAS QR ================== */
 function rutaInicial(){
   const h=location.hash;
-  if(!h) { ir('inicio'); return; }
-  if(h.startsWith('#exp=')){
-    const e=EXPERIMENTOS.find(x=>x.id===h.slice(5));
-    if(e){ ir('experimentos'); abrirPadres(e); return; }
+  if(h.startsWith('#rama=')){
+    const r=h.slice(6);
+    if(RAMAS.includes(r)){ ir('arbol'); document.querySelector(`.fruto[data-rama="${r}"]`).click(); return; }
   }
-  if(h==='#calma'){ ir('calma'); iniciarCalma(); return; }
-  if(h==='#casa'){ ir('casa'); return; }
+  if(h==='#calma'){ ir('calma'); return; }
+  if(h==='#familia'){ ir('familia'); return; }
   ir('inicio');
 }
 rutaInicial();
-
 
 </script>
 </body>
